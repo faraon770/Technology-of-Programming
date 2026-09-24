@@ -1,0 +1,82 @@
+:root {
+  --ink: #16123a;
+  --paper: #eef1ff;
+  --grid: #d6dcf7;
+  --accent: #6c4bff;
+  --sun: #ffd43b;
+  --ok: #0ea472;
+  --bad: #ff4d6d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 28px 14px 48px; color: var(--ink);
+  font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.card {
+  max-width: 540px; margin: 0 auto; background: #fff; padding: 26px 24px 28px;
+  border: 3px solid var(--ink); border-radius: 16px; box-shadow: 9px 9px 0 var(--ink);
+}
+h1 {
+  display: inline; font-size: 1.6rem; font-weight: 900; letter-spacing: -.02em; line-height: 1.5;
+  background: linear-gradient(transparent 55%, var(--sun) 55%);
+}
+form { margin-top: 22px; }
+.field { margin-bottom: 18px; padding: 0; border: 0; min-width: 0; }
+.field > label, legend {
+  display: block; font-weight: 800; font-size: .95rem; margin-bottom: 7px; padding: 0;
+}
+input[type=text], input[type=email], input[type=number], input[type=tel],
+input[type=date], input[type=time], select {
+  width: 100%; padding: 12px 14px; font: inherit; font-size: 1rem; color: var(--ink);
+  background: #fff; border: 2px solid var(--ink); border-radius: 10px;
+  transition: box-shadow .15s, transform .15s, background .15s;
+}
+input::placeholder { color: #8b88a8; }
+input:focus, select:focus { outline: none; box-shadow: 4px 4px 0 var(--accent); transform: translate(-2px, -2px); }
+.field.valid input:not([type=checkbox]):not([type=radio]), .field.valid select { border-color: var(--ok); background: #effcf7; }
+.field.invalid input:not([type=checkbox]):not([type=radio]), .field.invalid select { border-color: var(--bad); background: #fff1f4; }
+
+/* checkbox / radio как кликабельные плашки */
+.opt {
+  display: flex; align-items: center; gap: 10px; margin: 6px 0; padding: 10px 12px;
+  font-weight: 600; cursor: pointer; background: #fff;
+  border: 2px solid var(--ink); border-radius: 10px; transition: background .15s;
+}
+.opt:hover { background: #f4f1ff; }
+.opt:has(input:checked) { background: var(--sun); }
+.opt input { width: 1.2rem; height: 1.2rem; margin: 0; accent-color: var(--ink); flex: none; }
+.field.invalid .opt { border-color: var(--bad); }
+
+.error {
+  display: block; margin-top: 6px; font-size: .85rem; font-weight: 700; color: var(--bad);
+}
+.error:not(:empty)::before { content: "✕ "; }
+.field.valid > .error:empty::before { content: none; }
+.hint { display: block; margin-top: 6px; font-size: .85rem; font-weight: 700; color: var(--accent); }
+
+button[type=submit] {
+  width: 100%; padding: 14px; font: inherit; font-size: 1.05rem; font-weight: 900; color: #fff;
+  background: var(--accent); border: 3px solid var(--ink); border-radius: 12px; cursor: pointer;
+  box-shadow: 5px 5px 0 var(--ink); transition: transform .12s, box-shadow .12s;
+}
+button[type=submit]:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+button[type=submit]:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--ink); }
+button:focus-visible, .opt:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.result {
+  display: none; margin-top: 26px; padding: 16px 18px; background: #d3f9e8;
+  border: 3px solid var(--ink); border-radius: 12px; box-shadow: 5px 5px 0 var(--ink);
+}
+.result.show { display: block; animation: pop .35s cubic-bezier(.2,1.4,.4,1); }
+.result h2 { margin: 0 0 10px; font-size: 1.1rem; font-weight: 900; }
+.result h2::before { content: "✓ "; color: var(--ok); }
+.result p { margin: 5px 0; font-weight: 600; }
+.hidden { display: none; }
+@keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+@media (max-width: 480px) { .card { padding: 20px 16px 22px; box-shadow: 6px 6px 0 var(--ink); } h1 { font-size: 1.35rem; } }
