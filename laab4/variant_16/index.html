@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вариант 16 — Оформление заказа</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="card">
+  <h1>Оформление заказа</h1>
+  <form id="orderForm" novalidate>
+    <div class="field" data-field="name">
+      <label for="name">Имя</label>
+      <input id="name" type="text">
+      <span class="error"></span>
+    </div>
+    <div class="field" data-field="phone">
+      <label for="phone">Телефон</label>
+      <input id="phone" type="tel" placeholder="+7 700 123 45 67">
+      <span class="error"></span>
+    </div>
+    <div class="field" data-field="email">
+      <label for="email">E-mail</label>
+      <input id="email" type="email">
+      <span class="error"></span>
+    </div>
+    <fieldset class="field" data-field="delivery">
+      <legend>Доставка</legend>
+      <label class="opt"><input type="radio" name="delivery" value="Курьер"> Курьер</label>
+      <label class="opt"><input type="radio" name="delivery" value="Самовывоз"> Самовывоз</label>
+      <span class="error"></span>
+    </fieldset>
+    <div class="field hidden" data-field="city" id="cityBlock">
+      <label for="city">Город</label>
+      <select id="city">
+        <option value="">Выберите город</option>
+        <option>Алматы</option>
+        <option>Астана</option>
+        <option>Шымкент</option>
+      </select>
+      <span class="error"></span>
+    </div>
+    <div class="field hidden" data-field="address" id="addressBlock">
+      <label for="address">Адрес доставки</label>
+      <input id="address" type="text" placeholder="Улица, дом, квартира">
+      <span class="error"></span>
+    </div>
+    <fieldset class="field" data-field="payment">
+      <legend>Оплата</legend>
+      <label class="opt"><input type="radio" name="payment" value="Картой онлайн"> Картой онлайн</label>
+      <label class="opt"><input type="radio" name="payment" value="Наличными при получении"> Наличными при получении</label>
+      <span class="error"></span>
+    </fieldset>
+    <div class="field" data-field="agreeTerms">
+      <label class="opt"><input id="agreeTerms" type="checkbox"> Согласен с условиями покупки</label>
+      <span class="error"></span>
+    </div>
+    <div class="field" data-field="agreeData">
+      <label class="opt"><input id="agreeData" type="checkbox"> Согласен на обработку персональных данных</label>
+      <span class="error"></span>
+    </div>
+    <button type="submit">Оформить заказ</button>
+  </form>
+  <div id="result" class="result"></div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

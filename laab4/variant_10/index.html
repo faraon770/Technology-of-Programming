@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вариант 10 — Анкета сотрудника</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="card">
+  <h1>Анкета сотрудника</h1>
+  <form id="employeeForm" novalidate>
+    <div class="field" data-field="fullName">
+      <label for="fullName">ФИО</label>
+      <input id="fullName" type="text">
+      <span class="error"></span>
+    </div>
+    <div class="field" data-field="age">
+      <label for="age">Возраст (18–70)</label>
+      <input id="age" type="number">
+      <span class="error"></span>
+    </div>
+    <div class="field" data-field="department">
+      <label for="department">Отдел</label>
+      <select id="department">
+        <option value="">Выберите отдел</option>
+        <option>Разработка</option>
+        <option>Бухгалтерия</option>
+        <option>Маркетинг</option>
+        <option>Кадры</option>
+      </select>
+      <span class="error"></span>
+    </div>
+    <fieldset class="field" data-field="format">
+      <legend>Формат работы</legend>
+      <label class="opt"><input type="radio" name="format" value="Офис"> Офис</label>
+      <label class="opt"><input type="radio" name="format" value="Удалённо"> Удалённо</label>
+      <label class="opt"><input type="radio" name="format" value="Гибрид"> Гибрид</label>
+      <span class="error"></span>
+    </fieldset>
+    <!-- Творческое: дополнительное поле появляется только для удалённой работы -->
+    <div class="field hidden" data-field="city" id="cityBlock">
+      <label for="city">Город проживания</label>
+      <input id="city" type="text">
+      <span class="error"></span>
+    </div>
+    <button type="submit">Отправить анкету</button>
+  </form>
+  <div id="result" class="result"></div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
