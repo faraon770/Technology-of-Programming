@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор заказа</title><link rel="stylesheet" href="style.css"></head><body>
+
+<div class="app"><h1>🚚 Расчет заказа</h1><input id="price" type="number" placeholder="Цена товара"><input id="count" type="number" value="1" min="1">
+<select id="delivery"><option value="0">Самовывоз — 0 ₸</option><option value="1500">Обычная доставка — 1500 ₸</option><option value="3000">Экспресс — 3000 ₸</option></select>
+<button id="calc">Рассчитать</button><div class="total">Итого: <b id="result">0 ₸</b></div></div>
+<script src="script.js"></script></body></html>
