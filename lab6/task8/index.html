@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Задание 8. Таблица студентов</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <div class="head">
+      <div class="icon">🎓</div>
+      <div>
+        <span class="badge">Лабораторная работа №6 · Задание 8</span>
+        <h1>Таблица студентов</h1>
+      </div>
+    </div>
+    <form id="form" class="row">
+      <input id="name" type="text" placeholder="Имя" required>
+      <input id="score" type="number" min="0" max="100" placeholder="Балл" style="max-width:90px" required>
+      <button type="submit">Добавить</button>
+    </form>
+    <table>
+      <thead><tr><th>№</th><th>Имя</th><th>Балл</th><th></th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <p id="stat" class="muted"></p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Задание 18. Файловый менеджер</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <div class="head">
+      <div class="icon">📁</div>
+      <div>
+        <span class="badge">Лабораторная работа №6 · Задание 18</span>
+        <h1>Файловый менеджер</h1>
+      </div>
+    </div>
+    <div class="row">
+      <input id="nameInput" type="text" placeholder="Имя (необязательно)">
+      <button id="addFolder">+ Папка</button>
+      <button id="addFile">+ Файл</button>
+    </div>
+    <div class="row">
+      <button id="renameBtn">Переименовать (F2)</button>
+      <button id="deleteBtn" class="danger">Удалить (Del)</button>
+    </div>
+    <ul id="fs"></ul>
+    <p id="stat" class="muted"></p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

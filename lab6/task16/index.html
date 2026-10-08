@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Задание 16. Kanban-доска</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <div class="head">
+      <div class="icon">🗂️</div>
+      <div>
+        <span class="badge">Лабораторная работа №6 · Задание 16</span>
+        <h1>Kanban-доска</h1>
+      </div>
+    </div>
+    <div class="row">
+      <input id="cardInput" type="text" placeholder="Новая карточка">
+      <button id="addBtn">Добавить</button>
+    </div>
+    <div class="board">
+      <section class="col"><h3>Новые <span class="cnt"></span></h3><div class="cards"></div></section>
+      <section class="col"><h3>В работе <span class="cnt"></span></h3><div class="cards"></div></section>
+      <section class="col"><h3>Готово <span class="cnt"></span></h3><div class="cards"></div></section>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

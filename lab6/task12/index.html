@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Задание 12. Модальное окно</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <div class="head">
+      <div class="icon">🪟</div>
+      <div>
+        <span class="badge">Лабораторная работа №6 · Задание 12</span>
+        <h1>Модальное окно</h1>
+      </div>
+    </div>
+    <button id="openBtn">Открыть окно</button>
+    <p class="muted">Окно открывалось раз: <b id="counter">0</b></p>
+    <div id="overlay" class="overlay">
+      <div class="modal" role="dialog" aria-modal="true">
+        <h2>Модальное окно</h2>
+        <p>Закройте окно кнопкой, кликом вне окна или клавишей Escape.</p>
+        <button id="closeBtn" class="danger">Закрыть</button>
+      </div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

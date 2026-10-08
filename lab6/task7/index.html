@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Задание 7. To-Do List</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <div class="head">
+      <div class="icon">✅</div>
+      <div>
+        <span class="badge">Лабораторная работа №6 · Задание 7</span>
+        <h1>To-Do List</h1>
+      </div>
+    </div>
+    <div class="row">
+      <input id="taskInput" type="text" placeholder="Новая задача">
+      <button id="addBtn">Добавить</button>
+    </div>
+    <div class="row filters">
+      <button data-filter="all">Все</button>
+      <button data-filter="active">Активные</button>
+      <button data-filter="done">Выполненные</button>
+      <button id="clearBtn" class="danger">Очистить выполненные</button>
+    </div>
+    <ul id="tasks"></ul>
+    <p id="stat" class="muted"></p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
