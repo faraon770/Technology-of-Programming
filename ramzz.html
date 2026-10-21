@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111024">
+  <meta name="description" content="Ramz Store — электроника, которую выбирают с удовольствием.">
+  <title>Ramz Store — техника для вашего ритма</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#111024",
+            violet: { 50: "#f4f1ff", 100: "#e9e2ff", 500: "#7555ee", 600: "#6241dc", 700: "#5032bf" }
+          },
+          fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"] }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --ink: #111024; --muted: #77758a; --violet: #7555ee; --line: #eeedf3; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); font-family: "DM Sans", sans-serif; background: #fbfaff; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #a995ff; outline-offset: 3px; }
+    .display { font-family: "Manrope", sans-serif; }
+    .shell { width: min(1240px, calc(100% - 48px)); margin-inline: auto; }
+    .top-note { background: #201b40; color: #ded9fa; font-size: 12px; letter-spacing: .02em; }
+    .site-header { background: #111024; color: white; position: sticky; z-index: 20; top: 0; }
+    .search-wrap { background: #211f35; border: 1px solid #37344c; }
+    .search-wrap:focus-within { border-color: #917cff; box-shadow: 0 0 0 3px #7555ee30; }
+    .hero { background: radial-gradient(ellipse at 78% 30%, #6946d68c 0, transparent 38%), radial-gradient(ellipse at 45% 110%, #293c89 0, transparent 52%), #141229; overflow: hidden; }
+    .hero::after { content: ""; position: absolute; inset: 0; opacity: .2; pointer-events: none; background-image: radial-gradient(#c4b9ff 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(90deg, transparent, black); }
+    .hero-visual { position: absolute; inset: 0 0 0 48%; background: url("https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1300&q=85") center 45%/cover; opacity: .42; mask-image: linear-gradient(90deg, transparent 0%, black 42%); }
+    .hero-orb { position: absolute; width: 390px; height: 390px; border-radius: 50%; right: 13%; top: 4%; background: #8d70ff22; filter: blur(4px); box-shadow: 0 0 120px #7754fa55; }
+    .hero-content { position: relative; z-index: 1; }
+    .category-chip { transition: .2s ease; }
+    .category-chip[aria-pressed="true"] { background: #17142a; color: white; border-color: #17142a; box-shadow: 0 6px 16px #11102418; }
+    .product-card { transition: transform .24s ease, box-shadow .24s ease; }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 18px 42px #20153e12; }
+    .product-image { background: linear-gradient(135deg, #f3f0ff, #f8f7fb); }
+    .product-image img { transition: transform .5s ease; }
+    .product-card:hover .product-image img { transform: scale(1.06); }
+    dialog { color: var(--ink); border: 0; padding: 0; border-radius: 24px; box-shadow: 0 28px 90px #100b2c35; max-height: min(90dvh, 900px); }
+    dialog::backdrop { background: #100d20a6; backdrop-filter: blur(5px); }
+    .modal-scroll { max-height: min(90dvh, 900px); overflow-y: auto; }
+    .toast { animation: toast-in .25s ease both; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { animation: fade-up .55s ease both; }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .nav-link { transition: color .2s; }
+    .nav-link:hover { color: #c8bcff; }
+    .stock-low { color: #bd5b35; }
+    .admin-tab[aria-selected="true"] { color: #6241dc; border-bottom: 2px solid #7555ee; }
+    .field { width: 100%; border: 1px solid #e7e5ee; border-radius: 12px; padding: 12px 14px; background: white; color: var(--ink); }
+    .field:focus { border-color: #8c75ee; outline: 3px solid #7555ee20; }
+    .btn-primary { border: 0; border-radius: 12px; padding: 12px 18px; background: #7555ee; color: white; font-weight: 700; transition: .2s; }
+    .btn-primary:hover { background: #6241dc; transform: translateY(-1px); }
+    .btn-primary:disabled { background: #bdb7cf; cursor: not-allowed; transform: none; }
+    .icon-btn { display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; color: inherit; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    @media (max-width: 640px) {
+      .shell { width: min(100% - 32px, 1240px); }
+      .hero-visual { inset: 0 0 0 26%; opacity: .25; }
+      dialog { width: calc(100% - 24px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-note">
+    <div class="shell flex min-h-9 items-center justify-center gap-2 text-center">
+      <span aria-hidden="true">✦</span><span>Бесплатная доставка от 50 000 ₸</span><span class="hidden sm:inline text-violet-200">·</span><span class="hidden sm:inline">Поддержка каждый день с 9:00 до 21:00</span>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="shell flex min-h-[76px] items-center gap-5">
+      <a href="#" class="display flex shrink-0 items-center gap-2.5 text-xl font-extrabold tracking-tight text-white" aria-label="Ramz Store — на главную">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-violet-500 text-lg">R</span><span>ramz<span class="text-violet-300">.</span></span>
+      </a>
+      <nav class="hidden items-center gap-5 text-sm text-slate-300 lg:flex" aria-label="Основная навигация">
+        <a class="nav-link" href="#catalog">Каталог</a><a class="nav-link" href="#advantages">О магазине</a>
+      </nav>
+      <label class="search-wrap ml-auto flex h-11 min-w-0 max-w-[450px] flex-1 items-center gap-2.5 rounded-xl px-3.5">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input id="searchInput" class="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-400" type="search" placeholder="Поиск по каталогу…" autocomplete="off" aria-label="Поиск товаров">
+        <kbd class="hidden rounded border border-slate-600 px-1.5 py-0.5 text-[10px] text-slate-400 sm:inline">⌘ K</kbd>
+      </label>
+      <div class="flex shrink-0 items-center gap-2">
+        <button id="authButton" class="flex h-10 items-center gap-2 rounded-xl px-2 text-sm text-slate-200 transition hover:bg-white/10 sm:px-3" type="button">
+          <span aria-hidden="true">♙</span><span id="authButtonLabel" class="hidden sm:inline">Войти</span>
+        </button>
+        <button id="adminButton" class="hidden h-10 items-center gap-2 rounded-xl px-3 text-sm text-violet-200 transition hover:bg-white/10" type="button">⚙ <span class="hidden md:inline">Админ</span></button>
+        <button id="cartButton" class="relative grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-white transition hover:bg-white/20" type="button" aria-label="Открыть корзину">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L20.5 8H6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19" r="1.3" fill="currentColor"/><circle cx="17.5" cy="19" r="1.3" fill="currentColor"/></svg>
+          <span id="cartBadge" class="absolute -right-1 -top-1 hidden min-w-5 rounded-full bg-violet-500 px-1 text-center text-[10px] font-bold leading-5 text-white">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell pt-6 sm:pt-8">
+      <div class="hero relative min-h-[390px] overflow-hidden rounded-[28px] text-white sm:min-h-[440px]">
+        <div class="hero-visual" aria-hidden="true"></div><div class="hero-orb" aria-hidden="true"></div>
+        <div class="hero-content flex min-h-[390px] items-center px-7 py-12 sm:min-h-[440px] sm:px-14">
+          <div class="max-w-[570px] fade-up">
+            <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-violet-100"><span class="h-1.5 w-1.5 rounded-full bg-emerald-300"></span>ТЕХНОЛОГИИ НА КАЖДЫЙ ДЕНЬ</div>
+            <h1 class="display text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl">Твой мир.<br><span class="text-violet-300">Твои правила.</span></h1>
+            <p class="mt-5 max-w-md text-sm leading-6 text-slate-300 sm:text-base">Выбирай технику, которая помогает быть собой. Только проверенные бренды, честные цены и забота о каждой детали.</p>
+            <div class="mt-7 flex flex-wrap items-center gap-3">
+              <a href="#catalog" class="inline-flex h-12 items-center gap-2 rounded-xl bg-violet-500 px-5 text-sm font-bold text-white transition hover:bg-violet-600">Выбрать технику <span aria-hidden="true">↗</span></a>
+              <div class="flex items-center gap-2.5 text-xs text-slate-300"><span class="flex -space-x-2"><i class="grid h-7 w-7 place-items-center rounded-full border-2 border-ink bg-orange-200 not-italic">😊</i><i class="grid h-7 w-7 place-items-center rounded-full border-2 border-ink bg-blue-200 not-italic">🙂</i><i class="grid h-7 w-7 place-items-center rounded-full border-2 border-ink bg-violet-200 not-italic">😎</i></span><span>Выбор 2 000+ покупателей</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-content absolute bottom-5 right-7 hidden items-center gap-2 text-xs text-white/65 sm:flex"><span class="h-px w-8 bg-white/40"></span>Найди то, что вдохновляет</div>
+      </div>
+    </section>
+
+    <section id="advantages" class="shell grid grid-cols-2 gap-3 py-6 sm:grid-cols-4 sm:py-8">
+      <div class="flex items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-lg">✦</span><div><p class="text-sm font-bold">Оригинальная техника</p><p class="mt-0.5 text-xs text-slate-500">Только проверенные товары</p></div></div>
+      <div class="flex items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-lg">↗</span><div><p class="text-sm font-bold">Быстрая доставка</p><p class="mt-0.5 text-xs text-slate-500">По всему Казахстану</p></div></div>
+      <div class="flex items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-lg">♡</span><div><p class="text-sm font-bold">Гарантия качества</p><p class="mt-0.5 text-xs text-slate-500">Помогаем после покупки</p></div></div>
+      <div class="flex items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-lg">₸</span><div><p class="text-sm font-bold">Честные цены</p><p class="mt-0.5 text-xs text-slate-500">Удобная оплата при получении</p></div></div>
+    </section>
+
+    <section id="catalog" class="shell pb-20 pt-3">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div><p class="mb-2 text-xs font-bold uppercase tracking-[.18em] text-violet-600">НАШ ВЫБОР</p><h2 class="display text-3xl font-extrabold tracking-tight sm:text-4xl">Каталог техники</h2><p class="mt-2 text-sm text-slate-500">Всё нужное — в одном месте. Выбирай с удовольствием.</p></div>
+        <label class="flex items-center gap-2 text-sm text-slate-500">Сортировка
+          <select id="sortSelect" class="rounded-xl border border-violet-100 bg-white px-3 py-2.5 text-sm font-semibold text-ink"><option value="popular">Сначала популярные</option><option value="price-asc">Сначала дешевле</option><option value="price-desc">Сначала дороже</option><option value="rating">По рейтингу</option></select>
+        </label>
+      </div>
+      <div id="categoryList" class="mt-7 flex gap-2 overflow-x-auto pb-2" role="group" aria-label="Фильтр по категории"></div>
+      <div class="mt-3 flex items-center justify-between"><p id="resultCount" class="text-sm text-slate-500" aria-live="polite"></p><button id="clearFilters" class="hidden text-sm font-semibold text-violet-600 hover:text-violet-800" type="button">Сбросить фильтры</button></div>
+      <div id="productGrid" class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5"></div>
+    </section>
+  </main>
+  <footer class="bg-ink text-white">
+    <div class="shell flex flex-col gap-8 py-10 sm:flex-row sm:items-center sm:justify-between">
+      <div><a href="#" class="display text-xl font-extrabold">ramz<span class="text-violet-300">.</span></a><p class="mt-2 max-w-sm text-sm text-slate-400">Техника для твоего ритма. Выбирай, вдохновляйся, создавай.</p></div>
+      <div class="text-sm text-slate-400"><p>Пн–Вс · 9:00–21:00</p><p class="mt-1">Учебный демонстрационный магазин</p><p class="mt-1 text-xs text-slate-500">Авторизация и платежи здесь не являются реальными.</p></div>
+      <p class="text-xs text-slate-500">© Ramz Store, 2025</p>
+    </div>
+  </footer>
+
+  <dialog id="authDialog" aria-labelledby="authTitle">
+    <div class="modal-scroll w-full max-w-[440px] p-6 sm:p-8">
+      <div class="flex items-start justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">РАДЫ ВИДЕТЬ</p><h2 id="authTitle" class="display mt-2 text-2xl font-extrabold">Войти в аккаунт</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="authDialog" aria-label="Закрыть">×</button></div>
+      <div class="mt-5 grid grid-cols-2 rounded-xl bg-slate-100 p-1"><button id="loginTab" class="rounded-lg bg-white py-2 text-sm font-bold shadow-sm" type="button">Войти</button><button id="registerTab" class="rounded-lg py-2 text-sm font-semibold text-slate-500" type="button">Создать аккаунт</button></div>
+      <form id="authForm" class="mt-5 space-y-4" novalidate>
+        <div id="authNameGroup" class="hidden"><label for="authName" class="mb-1.5 block text-sm font-semibold">Ваше имя</label><input class="field" id="authName" name="name" autocomplete="name" maxlength="80" placeholder="Например, Айдана"></div>
+        <div><label for="authEmail" class="mb-1.5 block text-sm font-semibold">Электронная почта</label><input class="field" id="authEmail" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="name@example.com"></div>
+        <div><label for="authPassword" class="mb-1.5 block text-sm font-semibold">Пароль</label><input class="field" id="authPassword" name="password" type="password" autocomplete="current-password" minlength="6" maxlength="128" required placeholder="Не менее 6 символов"></div>
+        <p id="authError" class="hidden text-sm font-medium text-red-600" role="alert"></p>
+        <button class="btn-primary w-full" type="submit"><span id="authSubmitLabel">Войти</span></button>
+      </form>
+      <div class="mt-5 rounded-xl border border-violet-100 bg-violet-50 p-3.5 text-xs leading-5 text-slate-600"><strong class="text-ink">Демо-администратор</strong><br>admin@shop.kz / admin123</div>
+      <p class="mt-4 text-[11px] leading-4 text-slate-400">Демонстрация: учётная запись хранится только в LocalStorage этого браузера. Не используйте реальные пароли.</p>
+    </div>
+  </dialog>
+
+  <dialog id="cartDialog" aria-labelledby="cartTitle">
+    <div class="modal-scroll w-full max-w-[620px] p-5 sm:p-7">
+      <div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">ВАШ ВЫБОР</p><h2 id="cartTitle" class="display mt-1 text-2xl font-extrabold">Корзина</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="cartDialog" aria-label="Закрыть корзину">×</button></div>
+      <div id="cartContent" class="mt-5"></div>
+    </div>
+  </dialog>
+
+  <dialog id="checkoutDialog" aria-labelledby="checkoutTitle">
+    <div class="modal-scroll w-full max-w-[520px] p-6 sm:p-8">
+      <div class="flex items-start justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">ПОСЛЕДНИЙ ШАГ</p><h2 id="checkoutTitle" class="display mt-2 text-2xl font-extrabold">Оформление заказа</h2><p class="mt-1 text-sm text-slate-500">Оплата наличными при получении</p></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="checkoutDialog" aria-label="Закрыть">×</button></div>
+      <form id="checkoutForm" class="mt-6 space-y-4" novalidate>
+        <div><label for="customerName" class="mb-1.5 block text-sm font-semibold">ФИО</label><input class="field" id="customerName" name="fullName" autocomplete="name" maxlength="120" required placeholder="Фамилия Имя Отчество"></div>
+        <div><label for="customerPhone" class="mb-1.5 block text-sm font-semibold">Телефон Казахстана</label><input class="field" id="customerPhone" name="phone" type="tel" autocomplete="tel" maxlength="24" required placeholder="+7 (7__) ___-__-__"></div>
+        <div><label for="customerAddress" class="mb-1.5 block text-sm font-semibold">Адрес доставки</label><textarea class="field resize-y" id="customerAddress" name="address" rows="2" maxlength="300" required placeholder="Город, улица, дом, квартира"></textarea></div>
+        <div><label for="customerComment" class="mb-1.5 block text-sm font-semibold">Комментарий <span class="font-normal text-slate-400">(необязательно)</span></label><textarea class="field resize-y" id="customerComment" name="comment" rows="2" maxlength="500" placeholder="Например, позвонить за час до доставки"></textarea></div>
+        <p id="checkoutError" class="hidden text-sm font-medium text-red-600" role="alert"></p>
+        <div id="checkoutSummary" class="rounded-xl bg-slate-50 p-4"></div>
+        <button class="btn-primary w-full" type="submit">Подтвердить заказ</button>
+        <p class="text-center text-xs text-slate-400">Нажимая кнопку, вы оформляете учебный заказ без реальной оплаты.</p>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog id="adminDialog" aria-labelledby="adminTitle">
+    <div class="modal-scroll w-full max-w-[1000px] p-5 sm:p-8">
+      <div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">УПРАВЛЕНИЕ МАГАЗИНОМ</p><h2 id="adminTitle" class="display mt-1 text-2xl font-extrabold">Панель администратора</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="adminDialog" aria-label="Закрыть панель">×</button></div>
+      <div id="adminMetrics" class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4"></div>
+      <div class="mt-7 flex gap-5 border-b border-slate-200"><button class="admin-tab pb-3 text-sm font-bold" type="button" data-admin-tab="products" aria-selected="true">Товары</button><button class="admin-tab pb-3 text-sm font-bold text-slate-500" type="button" data-admin-tab="orders" aria-selected="false">Заказы</button></div>
+      <section id="adminProductsPanel" class="pt-5"><div class="mb-4 flex items-center justify-between gap-3"><h3 class="text-lg font-bold">Каталог <span id="adminProductCount" class="text-sm font-medium text-slate-400"></span></h3><button id="addProductButton" class="btn-primary px-3 py-2 text-sm" type="button">＋ Добавить товар</button></div><div id="adminProductList" class="space-y-2"></div></section>
+      <section id="adminOrdersPanel" class="hidden pt-5"><h3 class="mb-4 text-lg font-bold">Заказы</h3><div id="adminOrderList" class="space-y-3"></div></section>
+    </div>
+  </dialog>
+
+  <dialog id="productDialog" aria-labelledby="productEditorTitle">
+    <div class="modal-scroll w-full max-w-[500px] p-6 sm:p-8">
+      <div class="flex items-start justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">КАТАЛОГ</p><h2 id="productEditorTitle" class="display mt-2 text-2xl font-extrabold">Новый товар</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="productDialog" aria-label="Закрыть">×</button></div>
+      <form id="productForm" class="mt-5 space-y-3.5" novalidate>
+        <input type="hidden" id="editProductId">
+        <div><label for="productName" class="mb-1 block text-sm font-semibold">Название</label><input class="field" id="productName" maxlength="100" required></div>
+        <div><label for="productCategory" class="mb-1 block text-sm font-semibold">Категория</label><select class="field" id="productCategory" required></select></div>
+        <div><label for="productDescription" class="mb-1 block text-sm font-semibold">Описание</label><textarea class="field" id="productDescription" maxlength="240" rows="2" required></textarea></div>
+        <div class="grid grid-cols-2 gap-3"><div><label for="productPrice" class="mb-1 block text-sm font-semibold">Цена, ₸</label><input class="field" id="productPrice" type="number" min="1" max="100000000" step="1" required></div><div><label for="productStock" class="mb-1 block text-sm font-semibold">Остаток, шт.</label><input class="field" id="productStock" type="number" min="0" max="100000" step="1" required></div></div>
+        <div><label for="productImage" class="mb-1 block text-sm font-semibold">URL фото</label><input class="field" id="productImage" type="url" maxlength="500" placeholder="https://…"></div>
+        <p id="productError" class="hidden text-sm font-medium text-red-600" role="alert"></p>
+        <button class="btn-primary w-full" type="submit">Сохранить товар</button>
+      </form>
+    </div>
+  </dialog>
+
+  <div id="toastRegion" class="pointer-events-none fixed bottom-4 right-4 z-50 flex max-w-[calc(100%-32px)] flex-col gap-2" aria-live="polite" aria-atomic="false"></div>
+
+  <script>
+    "use strict";
+    const STORAGE_KEY = "ramz-store-demo-v1";
+    const CATEGORIES = [
+      { id: "all", name: "Весь каталог" },
+      { id: "phones", name: "Смартфоны" },
+      { id: "laptops", name: "Ноутбуки" },
+      { id: "tablets", name: "Планшеты" },
+      { id: "headphones", name: "Наушники" },
+      { id: "accessories", name: "Аксессуары" }
+    ];
+    const PHOTO_IDS = {
+      phones: ["photo-1511707171634-5f897ff02aa9", "photo-1598327105666-5b89351aff97", "photo-1511707171634-5f897ff02aa9"],
+      laptops: ["photo-1496181133206-80ce9b88a853", "photo-1517336714731-489689fd1ca8", "photo-1588872657578-7efd1f1555ed"],
+      tablets: ["photo-1544244015-0df4b3ffc6b0", "photo-1561154464-82e9adf32764", "photo-1544244015-0df4b3ffc6b0"],
+      headphones: ["photo-1505740420928-5e560c06d30e", "photo-1484704849700-f032a568e944", "photo-1505740106531-4243f3831c78"],
+      accessories: ["photo-1523275335684-37898b6baf30", "photo-1503602642458-232111445657", "photo-1583394838336-acd977736f90"]
+    };
+    const SEED = [
+      ["phones", [["Apple iPhone 15 Pro", 599990], ["Samsung Galaxy S24", 449990], ["Google Pixel 8", 369990], ["Xiaomi 14", 389990], ["Apple iPhone 15", 449990], ["Samsung Galaxy A55", 219990], ["OnePlus 12", 429990], ["Xiaomi Redmi Note 13 Pro", 159990], ["Nothing Phone (2a)", 189990], ["HONOR Magic6 Pro", 499990]]],
+      ["laptops", [["Apple MacBook Air 13 M3", 649990], ["ASUS Zenbook 14 OLED", 589990], ["Lenovo Yoga Slim 7", 479990], ["HP Pavilion Plus 14", 439990], ["Acer Swift Go 14", 399990], ["Apple MacBook Pro 14", 1099990], ["ASUS ROG Zephyrus G14", 899990], ["Lenovo IdeaPad Slim 5", 329990], ["MSI Modern 15", 359990], ["Huawei MateBook D 16", 379990]]],
+      ["tablets", [["Apple iPad Air 11", 369990], ["Samsung Galaxy Tab S9", 399990], ["Xiaomi Pad 6", 179990], ["Apple iPad 10.9", 249990], ["Lenovo Tab P12", 189990], ["Huawei MatePad 11.5", 159990], ["Samsung Galaxy Tab A9+", 129990], ["Apple iPad Pro 11", 569990], ["HONOR Pad 9", 149990], ["OnePlus Pad Go", 139990]]],
+      ["headphones", [["Sony WH-1000XM5", 189990], ["Apple AirPods Pro 2", 149990], ["Bose QuietComfort Ultra", 249990], ["Samsung Galaxy Buds2 Pro", 89990], ["JBL Tune 770NC", 54990], ["Sennheiser Momentum 4", 199990], ["Apple AirPods 3", 99990], ["Marshall Major IV", 79990], ["Anker Soundcore Q45", 59990], ["Nothing Ear (a)", 69990]]],
+      ["accessories", [["Apple Watch Series 9", 229990], ["Samsung Galaxy Watch6", 139990], ["Anker PowerCore 20K", 24990], ["Apple MagSafe Charger", 19990], ["Logitech MX Master 3S", 54990], ["Keychron K2 Pro", 69990], ["Samsung T7 Shield 1TB", 69990], ["Anker USB-C Hub 8-in-1", 32990], ["Apple Pencil USB-C", 49990], ["Baseus GaN Charger 65W", 17990]]]
+    ];
+    const money = new Intl.NumberFormat("ru-KZ", { maximumFractionDigits: 0 });
+    const uid = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+    const byId = id => document.getElementById(id);
+    const el = (tag, className = "", text = "") => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== "") node.textContent = String(text);
+      return node;
+    };
+    const safeText = (value, max = 500) => typeof value === "string" ? value.trim().slice(0, max) : "";
+    const validImage = value => {
+      if (typeof value !== "string" || value.length > 500) return "";
+      try { const url = new URL(value); return url.protocol === "https:" ? url.href : ""; } catch { return ""; }
+    };
+    const seededProducts = () => SEED.flatMap(([category, items]) => items.map(([name, price], index) => ({
+      id: `${category}-${index + 1}`, name, price, category, stock: 3 + ((index * 7 + category.length) % 24),
+      rating: Number((4.45 + ((index * 3) % 6) / 10).toFixed(1)),
+      description: "Продуманная техника для работы, отдыха и вдохновения.",
+      image: `https://images.unsplash.com/${PHOTO_IDS[category][index % PHOTO_IDS[category].length]}?auto=format&fit=crop&w=700&q=80`
+    })));
+    const isValidProduct = product => product && typeof product === "object" &&
+      typeof product.id === "string" && product.id.length > 0 && product.id.length < 100 &&
+      typeof product.name === "string" && product.name.trim().length > 0 && product.name.length <= 100 &&
+      CATEGORIES.some(category => category.id !== "all" && category.id === product.category) &&
+      Number.isSafeInteger(product.price) && product.price > 0 && product.price <= 100000000 &&
+      Number.isSafeInteger(product.stock) && product.stock >= 0 && product.stock <= 100000 &&
+      Number.isFinite(product.rating) && product.rating >= 0 && product.rating <= 5 &&
+      typeof product.description === "string";
+    const cleanProduct = product => ({
+      id: product.id, name: safeText(product.name, 100), price: product.price, category: product.category,
+      stock: product.stock, rating: Math.round(product.rating * 10) / 10,
+      description: safeText(product.description, 240), image: validImage(product.image)
+    });
+    const defaults = () => ({ products: seededProducts(), users: [{ id: "admin", name: "Администратор", email: "admin@shop.kz", password: "admin123", role: "admin" }], cart: [], orders: [], currentUserId: null, promo: null });
+    let storageWarning = "";
+    const loadState = () => {
+      const initial = defaults();
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw === null) return initial;
+        const saved = JSON.parse(raw);
+        if (!saved || typeof saved !== "object" || Array.isArray(saved)) throw new Error("Ожидался объект состояния");
+        if (!Array.isArray(saved.products) || !Array.isArray(saved.users) || !Array.isArray(saved.cart) || !Array.isArray(saved.orders)) throw new Error("Некорректная структура данных");
+        const products = saved.products.filter(isValidProduct).map(cleanProduct);
+        const productIds = new Set(products.map(product => product.id));
+        if (productIds.size !== products.length) throw new Error("Повторяющиеся идентификаторы товаров");
+        const users = saved.users.filter(user => user && typeof user === "object" &&
+          typeof user.id === "string" && typeof user.name === "string" && typeof user.email === "string" &&
+          typeof user.password === "string" && ["admin", "customer"].includes(user.role))
+          .map(user => ({ id: safeText(user.id, 100), name: safeText(user.name, 80), email: safeText(user.email, 254).toLowerCase(), password: user.password.slice(0, 128), role: user.role }));
+        if (!users.some(user => user.email === "admin@shop.kz")) users.unshift(initial.users[0]);
+        const userIds = new Set(users.map(user => user.id));
+        const orders = saved.orders.filter(order => order && typeof order === "object" && typeof order.id === "string" && typeof order.userId === "string" &&
+          typeof order.customerName === "string" && typeof order.phone === "string" && typeof order.address === "string" &&
+          Array.isArray(order.items) && Number.isSafeInteger(order.total) && order.total >= 0 &&
+          ["new", "processing", "shipped", "completed", "cancelled"].includes(order.status))
+          .map(order => ({
+            id: safeText(order.id, 100), userId: safeText(order.userId, 100), customerName: safeText(order.customerName, 120),
+            phone: safeText(order.phone, 24), address: safeText(order.address, 300), comment: safeText(order.comment, 500),
+            items: order.items.filter(item => item && typeof item.productId === "string" && Number.isSafeInteger(item.quantity) && item.quantity > 0 && Number.isSafeInteger(item.price) && item.price >= 0)
+              .map(item => ({ productId: item.productId, name: safeText(item.name, 100), quantity: item.quantity, price: item.price })),
+            subtotal: Number.isSafeInteger(order.subtotal) ? order.subtotal : order.total,
+            delivery: Number.isSafeInteger(order.delivery) ? order.delivery : 0,
+            discount: Number.isSafeInteger(order.discount) ? order.discount : 0,
+            total: order.total, promoCode: typeof order.promoCode === "string" ? safeText(order.promoCode, 20) : null,
+            status: order.status, createdAt: typeof order.createdAt === "string" ? order.createdAt : new Date().toISOString()
+          }));
+        const cart = saved.cart.filter(item => item && typeof item.productId === "string" && Number.isSafeInteger(item.quantity) && item.quantity > 0)
+          .filter(item => productIds.has(item.productId))
+          .map(item => ({ productId: item.productId, quantity: Math.min(item.quantity, products.find(product => product.id === item.productId).stock) }))
+          .filter(item => item.quantity > 0);
+        return {
+          products, users, cart, orders,
+          currentUserId: typeof saved.currentUserId === "string" && userIds.has(saved.currentUserId) ? saved.currentUserId : null,
+          promo: ["DISCOUNT10", "SALE20"].includes(saved.promo) ? saved.promo : null
+        };
+      } catch (error) {
+        console.error("Не удалось прочитать сохранённое состояние магазина:", error);
+        storageWarning = "Сохранённые данные повреждены. Магазин запущен с демонстрационными данными.";
+        try { localStorage.removeItem(STORAGE_KEY); } catch (removeError) { console.error("Не удалось удалить повреждённые данные:", removeError); }
+        return initial;
+      }
+    };
+    const state = loadState();
+    let selectedCategory = "all";
+    let authMode = "login";
+    let pendingCheckout = false;
+    let storageFailureShown = false;
+    const persist = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        return true;
+      } catch (error) {
+        console.error("Не удалось сохранить данные магазина в LocalStorage:", error);
+        if (!storageFailureShown) { storageFailureShown = true; toast("Не удалось сохранить данные. Проверьте свободное место и настройки браузера.", "error"); }
+        return false;
+      }
+    };
+    const currentUser = () => state.users.find(user => user.id === state.currentUserId) || null;
+    const categoryName = id => CATEGORIES.find(category => category.id === id)?.name || "Категория";
+    const formatMoney = value => `${money.format(value)} ₸`;
+    function toast(message, type = "success") {
+      const item = el("div", `toast pointer-events-auto rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg ${type === "error" ? "bg-red-600" : "bg-ink"}`, message);
+      item.setAttribute("role", type === "error" ? "alert" : "status");
+      byId("toastRegion").append(item);
+      window.setTimeout(() => item.remove(), 3800);
+    }
+    function dialogOpen(dialog) { if (!dialog.open) dialog.showModal(); }
+    function closeDialog(id) { const dialog = byId(id); if (dialog?.open) dialog.close(); }
+    function cartQuantity() { return state.cart.reduce((total, item) => total + item.quantity, 0); }
+    function cartSubtotal() { return state.cart.reduce((total, item) => {
+      const product = state.products.find(candidate => candidate.id === item.productId);
+      return total + (product ? product.price * item.quantity : 0);
+    }, 0); }
+    function cartDelivery(subtotal = cartSubtotal()) { return subtotal === 0 || subtotal >= 50000 ? 0 : 1500; }
+    function cartDiscount(subtotal = cartSubtotal()) {
+      if (!state.promo || !subtotal) return 0;
+      return Math.round(subtotal * (state.promo === "DISCOUNT10" ? 0.1 : 0.2));
+    }
+    function cartTotal(subtotal = cartSubtotal()) { return Math.max(0, subtotal + cartDelivery(subtotal) - cartDiscount(subtotal)); }
+    function updateHeader() {
+      const user = currentUser();
+      byId("authButtonLabel").textContent = user ? user.name.split(/\s+/)[0] : "Войти";
+      byId("adminButton").classList.toggle("hidden", user?.role !== "admin");
+      const count = cartQuantity();
+      byId("cartBadge").textContent = String(count);
+      byId("cartBadge").classList.toggle("hidden", count === 0);
+    }
+    function renderCategories() {
+      const list = byId("categoryList");
+      list.replaceChildren();
+      for (const category of CATEGORIES) {
+        const button = el("button", `category-chip shrink-0 rounded-full border px-4 py-2.5 text-sm font-semibold ${selectedCategory === category.id ? "border-ink bg-ink text-white" : "border-violet-100 bg-white text-slate-600 hover:border-violet-300 hover:text-violet-700"}`, category.name);
+        button.type = "button";
+        button.setAttribute("aria-pressed", String(selectedCategory === category.id));
+        button.addEventListener("click", () => { selectedCategory = category.id; renderCategories(); renderProducts(); });
+        list.append(button);
+      }
+    }
+    function imageNode(src, alt, className) {
+      const image = el("img", className);
+      image.src = src || "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=80";
+      image.alt = alt;
+      image.loading = "lazy";
+      image.decoding = "async";
+      image.addEventListener("error", () => { image.hidden = true; image.parentElement.classList.add("grid", "place-items-center"); const fallback = el("span", "text-4xl text-violet-300", "✦"); fallback.setAttribute("aria-hidden", "true"); image.parentElement.append(fallback); }, { once: true });
+      return image;
+    }
+    function createProductCard(product) {
+      const article = el("article", "product-card group overflow-hidden rounded-2xl border border-violet-100 bg-white");
+      const visual = el("div", "product-image relative aspect-[4/3] overflow-hidden");
+      visual.append(imageNode(product.image, product.name, "h-full w-full object-cover"));
+      if (product.stock <= 3 && product.stock > 0) visual.append(el("span", "absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold text-amber-700 shadow-sm", "Мало осталось"));
+      const body = el("div", "p-3.5 sm:p-4");
+      const rating = el("div", "mb-2 flex items-center gap-1 text-xs text-amber-500", "★");
+      rating.append(el("span", "font-bold text-ink", product.rating.toFixed(1)), el("span", "text-slate-400", "·"), el("span", "text-slate-400", categoryName(product.category)));
+      const title = el("h3", "line-clamp-2 min-h-10 text-sm font-bold leading-5 sm:text-[15px]", product.name);
+      const description = el("p", "mt-1 line-clamp-2 min-h-8 text-xs leading-4 text-slate-500", product.description);
+      const priceRow = el("div", "mt-3 flex items-end justify-between gap-1");
+      priceRow.append(el("p", "display text-base font-extrabold tracking-tight sm:text-lg", formatMoney(product.price)));
+      priceRow.append(el("p", `shrink-0 text-[10px] ${product.stock > 0 ? "text-slate-400" : "font-semibold text-red-600"}`, product.stock > 0 ? `В наличии: ${product.stock}` : "Нет в наличии"));
+      const add = el("button", "mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-ink text-xs font-bold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 sm:text-sm", product.stock > 0 ? "＋ В корзину" : "Нет в наличии");
+      add.type = "button"; add.disabled = product.stock < 1; add.setAttribute("aria-label", `${product.stock > 0 ? "Добавить в корзину" : "Нет в наличии"}: ${product.name}`);
+      add.addEventListener("click", () => addToCart(product.id));
+      body.append(rating, title, description, priceRow, add);
+      article.append(visual, body);
+      return article;
+    }
+    function renderProducts() {
+      const query = byId("searchInput").value.trim().toLocaleLowerCase("ru");
+      const sort = byId("sortSelect").value;
+      const filtered = state.products.filter(product =>
+        (selectedCategory === "all" || product.category === selectedCategory) &&
+        (!query || `${product.name} ${product.description} ${categoryName(product.category)}`.toLocaleLowerCase("ru").includes(query))
+      );
+      if (sort === "price-asc") filtered.sort((a, b) => a.price - b.price);
+      if (sort === "price-desc") filtered.sort((a, b) => b.price - a.price);
+      if (sort === "rating") filtered.sort((a, b) => b.rating - a.rating);
+      if (sort === "popular") filtered.sort((a, b) => b.rating - a.rating || a.price - b.price);
+      byId("resultCount").textContent = `Найдено товаров: ${filtered.length}`;
+      byId("clearFilters").classList.toggle("hidden", !query && selectedCategory === "all" && sort === "popular");
+      const grid = byId("productGrid");
+      grid.replaceChildren();
+      if (!filtered.length) {
+        const empty = el("div", "col-span-full rounded-2xl border border-dashed border-violet-200 bg-white py-16 text-center");
+        empty.append(el("div", "text-4xl", "⌕"), el("h3", "mt-3 text-lg font-bold", "Ничего не нашлось"), el("p", "mt-1 text-sm text-slate-500", "Попробуйте изменить запрос или выбрать другую категорию."));
+        grid.append(empty);
+        return;
+      }
+      const fragment = document.createDocumentFragment();
+      for (const product of filtered) fragment.append(createProductCard(product));
+      grid.append(fragment);
+    }
+    function addToCart(productId) {
+      const product = state.products.find(item => item.id === productId);
+      if (!product || product.stock <= 0) { toast("Товар закончился.", "error"); return; }
+      const item = state.cart.find(entry => entry.productId === productId);
+      if ((item?.quantity || 0) >= product.stock) { toast(`Доступно только ${product.stock} шт.`, "error"); return; }
+      if (item) item.quantity += 1;
+      else state.cart.push({ productId, quantity: 1 });
+      persist(); updateHeader(); renderProducts();
+      toast(`${product.name} добавлен в корзину`);
+    }
+    function renderCart() {
+      const root = byId("cartContent");
+      root.replaceChildren();
+      state.cart = state.cart.filter(item => state.products.some(product => product.id === item.productId));
+      if (!state.cart.length) {
+        const empty = el("div", "py-10 text-center");
+        empty.append(el("div", "text-5xl", "🛍"), el("h3", "mt-4 text-lg font-bold", "Корзина пока пуста"), el("p", "mt-1 text-sm text-slate-500", "Самое время найти что-нибудь особенное."));
+        const link = el("button", "mt-5 rounded-xl bg-ink px-5 py-3 text-sm font-bold text-white hover:bg-violet-700", "Перейти к покупкам");
+        link.type = "button"; link.addEventListener("click", () => closeDialog("cartDialog"));
+        empty.append(link); root.append(empty); return;
+      }
+      const list = el("div", "divide-y divide-slate-100");
+      for (const item of state.cart) {
+        const product = state.products.find(candidate => candidate.id === item.productId);
+        const row = el("div", "flex gap-3 py-4");
+        const imageWrap = el("div", "h-[76px] w-[82px] shrink-0 overflow-hidden rounded-xl bg-violet-50");
+        imageWrap.append(imageNode(product.image, "", "h-full w-full object-cover"));
+        const info = el("div", "min-w-0 flex-1");
+        info.append(el("h3", "line-clamp-2 text-sm font-bold", product.name), el("p", "mt-1 text-sm font-extrabold text-violet-700", formatMoney(product.price)));
+        const actions = el("div", "mt-2 flex items-center justify-between gap-3");
+        const quantity = el("div", "flex h-8 items-center overflow-hidden rounded-lg border border-slate-200");
+        const decrease = el("button", "h-full w-8 text-lg hover:bg-slate-100", "−");
+        decrease.type = "button"; decrease.setAttribute("aria-label", `Уменьшить количество: ${product.name}`);
+        decrease.addEventListener("click", () => changeCartQuantity(product.id, -1));
+        const count = el("span", "min-w-8 text-center text-xs font-bold", item.quantity);
+        const increase = el("button", "h-full w-8 text-lg hover:bg-slate-100 disabled:text-slate-300", "+");
+        increase.type = "button"; increase.disabled = item.quantity >= product.stock; increase.setAttribute("aria-label", `Увеличить количество: ${product.name}`);
+        increase.addEventListener("click", () => changeCartQuantity(product.id, 1));
+        quantity.append(decrease, count, increase);
+        const remove = el("button", "text-xs font-semibold text-slate-400 hover:text-red-600", "Удалить");
+        remove.type = "button"; remove.addEventListener("click", () => removeFromCart(product.id));
+        actions.append(quantity, remove);
+        info.append(actions); row.append(imageWrap, info); list.append(row);
+      }
+      root.append(list);
+      const subtotal = cartSubtotal();
+      const summary = el("div", "mt-3 space-y-2 border-t border-slate-100 pt-4");
+      const subtotalRow = el("div", "flex justify-between text-sm text-slate-500"); subtotalRow.append(el("span", "", "Товары"), el("span", "font-semibold text-ink", formatMoney(subtotal)));
+      const deliveryRow = el("div", "flex justify-between text-sm text-slate-500"); deliveryRow.append(el("span", "", "Доставка"), el("span", "font-semibold text-ink", cartDelivery(subtotal) ? formatMoney(cartDelivery(subtotal)) : "Бесплатно"));
+      summary.append(subtotalRow, deliveryRow);
+      if (state.promo) {
+        const discountRow = el("div", "flex justify-between text-sm text-emerald-700"); discountRow.append(el("span", "", `Промокод ${state.promo}`), el("span", "font-semibold", `−${formatMoney(cartDiscount(subtotal))}`));
+        const removePromo = el("button", "text-xs font-semibold text-slate-400 hover:text-red-600", "Убрать промокод"); removePromo.type = "button"; removePromo.addEventListener("click", () => { state.promo = null; persist(); renderCart(); });
+        summary.append(discountRow, removePromo);
+      }
+      const totalRow = el("div", "flex justify-between border-t border-slate-100 pt-3 text-base font-extrabold"); totalRow.append(el("span", "", "Итого"), el("span", "text-violet-700", formatMoney(cartTotal(subtotal))));
+      summary.append(totalRow);
+      const promoForm = el("form", "mt-4 flex gap-2");
+      const promoInput = el("input", "field min-w-0 py-2.5 text-sm"); promoInput.placeholder = "Промокод"; promoInput.setAttribute("aria-label", "Промокод");
+      const apply = el("button", "shrink-0 rounded-xl border border-violet-200 px-4 text-sm font-bold text-violet-700 hover:bg-violet-50", "Применить"); apply.type = "submit";
+      promoForm.append(promoInput, apply);
+      promoForm.addEventListener("submit", event => { event.preventDefault(); applyPromo(promoInput.value); });
+      const checkout = el("button", "btn-primary mt-3 w-full", "Оформить заказ");
+      checkout.type = "button"; checkout.addEventListener("click", beginCheckout);
+      root.append(summary, promoForm, checkout);
+    }
+    function changeCartQuantity(productId, delta) {
+      const item = state.cart.find(entry => entry.productId === productId);
+      const product = state.products.find(entry => entry.id === productId);
+      if (!item || !product) return;
+      const next = item.quantity + delta;
+      if (next > product.stock) { toast(`В наличии только ${product.stock} шт.`, "error"); return; }
+      if (next < 1) state.cart = state.cart.filter(entry => entry.productId !== productId);
+      else item.quantity = next;
+      persist(); updateHeader(); renderCart(); renderProducts();
+    }
+    function removeFromCart(productId) {
+      state.cart = state.cart.filter(item => item.productId !== productId);
+      persist(); updateHeader(); renderCart(); renderProducts(); toast("Товар удалён из корзины");
+    }
+    function applyPromo(rawCode) {
+      const code = safeText(rawCode, 20).toUpperCase();
+      if (!["DISCOUNT10", "SALE20"].includes(code)) { toast("Промокод не найден. Проверьте написание.", "error"); return; }
+      if (state.promo) { toast("Скидки не суммируются. Сначала уберите текущий промокод.", "error"); return; }
+      state.promo = code; persist(); renderCart(); toast(`Промокод ${code} применён`);
+    }
+    function beginCheckout() {
+      if (!state.cart.length) { toast("Добавьте товары в корзину.", "error"); return; }
+      if (!currentUser()) { pendingCheckout = true; closeDialog("cartDialog"); setAuthMode("login"); dialogOpen(byId("authDialog")); toast("Войдите или создайте аккаунт, чтобы оформить заказ."); return; }
+      closeDialog("cartDialog"); openCheckout();
+    }
+    function openCheckout() {
+      if (!currentUser()) { pendingCheckout = true; dialogOpen(byId("authDialog")); return; }
+      byId("checkoutError").classList.add("hidden");
+      byId("customerName").value = currentUser().name;
+      byId("checkoutSummary").textContent = `К оплате при получении: ${formatMoney(cartTotal())}`;
+      dialogOpen(byId("checkoutDialog"));
+    }
+    function setAuthMode(mode) {
+      authMode = mode;
+      const registering = mode === "register";
+      byId("authTitle").textContent = registering ? "Создать аккаунт" : "Войти в аккаунт";
+      byId("authNameGroup").classList.toggle("hidden", !registering);
+      byId("authName").required = registering;
+      byId("authPassword").autocomplete = registering ? "new-password" : "current-password";
+      byId("authSubmitLabel").textContent = registering ? "Зарегистрироваться" : "Войти";
+      byId("loginTab").className = registering ? "rounded-lg py-2 text-sm font-semibold text-slate-500" : "rounded-lg bg-white py-2 text-sm font-bold shadow-sm";
+      byId("registerTab").className = registering ? "rounded-lg bg-white py-2 text-sm font-bold shadow-sm" : "rounded-lg py-2 text-sm font-semibold text-slate-500";
+      byId("authError").classList.add("hidden");
+    }
+    function showFormError(id, message) { const node = byId(id); node.textContent = message; node.classList.remove("hidden"); }
+    byId("authButton").addEventListener("click", () => {
+      if (currentUser()) {
+        state.currentUserId = null; persist(); updateHeader(); toast("Вы вышли из аккаунта."); return;
+      }
+      pendingCheckout = false; setAuthMode("login"); dialogOpen(byId("authDialog"));
+    });
+    byId("loginTab").addEventListener("click", () => setAuthMode("login"));
+    byId("registerTab").addEventListener("click", () => setAuthMode("register"));
+    byId("authForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const email = byId("authEmail").value.trim().toLowerCase();
+      const password = byId("authPassword").value;
+      const error = byId("authError"); error.classList.add("hidden");
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || password.length < 6 || password.length > 128) {
+        showFormError("authError", "Введите корректную почту и пароль длиной от 6 до 128 символов."); return;
+      }
+      let user;
+      if (authMode === "register") {
+        const name = safeText(byId("authName").value, 80);
+        if (name.length < 2) { showFormError("authError", "Введите имя не короче двух символов."); return; }
+        if (state.users.some(candidate => candidate.email === email)) { showFormError("authError", "Аккаунт с такой почтой уже существует."); return; }
+        user = { id: uid(), name, email, password, role: "customer" };
+        state.users.push(user);
+      } else {
+        user = state.users.find(candidate => candidate.email === email && candidate.password === password);
+        if (!user) { showFormError("authError", "Неверная почта или пароль."); return; }
+      }
+      state.currentUserId = user.id; persist(); updateHeader(); closeDialog("authDialog"); byId("authForm").reset();
+      toast(`Добро пожаловать, ${user.name.split(/\s+/)[0]}!`);
+      if (pendingCheckout) { pendingCheckout = false; openCheckout(); }
+    });
+    byId("cartButton").addEventListener("click", () => { renderCart(); dialogOpen(byId("cartDialog")); });
+    byId("checkoutForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const user = currentUser();
+      if (!user) { pendingCheckout = true; closeDialog("checkoutDialog"); dialogOpen(byId("authDialog")); return; }
+      const customerName = safeText(byId("customerName").value, 120);
+      const phoneDigits = byId("customerPhone").value.replace(/\D/g, "");
+      const phone = phoneDigits.length === 11 && phoneDigits.startsWith("8") ? `7${phoneDigits.slice(1)}` : phoneDigits;
+      const address = safeText(byId("customerAddress").value, 300);
+      const comment = safeText(byId("customerComment").value, 500);
+      if (customerName.length < 5 || customerName.split(/\s+/).length < 2) { showFormError("checkoutError", "Укажите имя и фамилию полностью."); return; }
+      if (!/^7\d{10}$/.test(phone)) { showFormError("checkoutError", "Введите номер Казахстана: +7 и 10 цифр."); return; }
+      if (address.length < 8) { showFormError("checkoutError", "Укажите полный адрес доставки."); return; }
+      if (!state.cart.length) { closeDialog("checkoutDialog"); toast("Корзина пуста.", "error"); return; }
+      const lines = [];
+      for (const entry of state.cart) {
+        const product = state.products.find(item => item.id === entry.productId);
+        if (!product || entry.quantity > product.stock) {
+          showFormError("checkoutError", `Недостаточно товара «${product?.name || "в корзине"}». Обновите количество.`);
+          renderCart(); return;
+        }
+        lines.push({ product, quantity: entry.quantity, price: product.price });
+      }
+      const subtotal = lines.reduce((sum, line) => sum + line.product.price * line.quantity, 0);
+      const delivery = cartDelivery(subtotal);
+      const discount = cartDiscount(subtotal);
+      const total = Math.max(0, subtotal + delivery - discount);
+      const order = {
+        id: `RS-${Date.now().toString(36).toUpperCase()}`, userId: user.id, customerName, phone: `+${phone}`,
+        address, comment, items: lines.map(line => ({ productId: line.product.id, name: line.product.name, quantity: line.quantity, price: line.price })),
+        subtotal, delivery, discount, total, promoCode: state.promo, status: "new", createdAt: new Date().toISOString()
+      };
+      for (const line of lines) line.product.stock -= line.quantity;
+      state.orders.unshift(order); state.cart = []; state.promo = null;
+      persist(); updateHeader(); renderProducts(); byId("checkoutForm").reset(); closeDialog("checkoutDialog");
+      toast(`Заказ ${order.id} оформлен! Оплата при получении.`);
+    });
+    byId("searchInput").addEventListener("input", renderProducts);
+    byId("sortSelect").addEventListener("change", renderProducts);
+    byId("clearFilters").addEventListener("click", () => {
+      byId("searchInput").value = ""; byId("sortSelect").value = "popular"; selectedCategory = "all"; renderCategories(); renderProducts();
+    });
+    document.addEventListener("keydown", event => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); byId("searchInput").focus(); }
+    });
+    document.addEventListener("click", event => {
+      const close = event.target.closest("[data-close]");
+      if (close) closeDialog(close.dataset.close);
+      if (event.target instanceof HTMLDialogElement && event.target.open) event.target.close();
+    });
+    function metricCard(label, value, note) {
+      const card = el("div", "rounded-2xl border border-violet-100 bg-violet-50/70 p-4");
+      card.append(el("p", "text-xs font-semibold text-slate-500", label), el("p", "display mt-2 text-xl font-extrabold", value), el("p", "mt-1 text-[11px] text-slate-500", note));
+      return card;
+    }
+    function renderAdmin() {
+      const paidOrders = state.orders.filter(order => order.status !== "cancelled");
+      const revenue = paidOrders.reduce((sum, order) => sum + order.total, 0);
+      const sold = paidOrders.reduce((sum, order) => sum + order.items.reduce((n, item) => n + item.quantity, 0), 0);
+      const metrics = byId("adminMetrics"); metrics.replaceChildren(
+        metricCard("Выручка заказов", formatMoney(revenue), "без отменённых заказов"),
+        metricCard("Всего заказов", String(state.orders.length), `${state.orders.filter(order => order.status === "new").length} новых`),
+        metricCard("Продано единиц", String(sold), "по текущей истории заказов"),
+        metricCard("Товаров в каталоге", String(state.products.length), `${state.products.filter(product => product.stock < 4).length} с остатком меньше 4`)
+      );
+      byId("adminProductCount").textContent = `(${state.products.length})`;
+      const productList = byId("adminProductList"); productList.replaceChildren();
+      if (!state.products.length) productList.append(el("p", "rounded-xl bg-slate-50 p-5 text-sm text-slate-500", "В каталоге пока нет товаров."));
+      for (const product of state.products) {
+        const row = el("div", "flex flex-wrap items-center gap-3 rounded-xl border border-slate-100 p-3");
+        const image = el("div", "h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-violet-50"); image.append(imageNode(product.image, "", "h-full w-full object-cover"));
+        const details = el("div", "min-w-[140px] flex-1"); details.append(el("p", "text-sm font-bold", product.name), el("p", "mt-1 text-xs text-slate-500", `${categoryName(product.category)} · ${formatMoney(product.price)} · остаток ${product.stock}`));
+        const edit = el("button", "rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold hover:bg-slate-50", "Изменить"); edit.type = "button"; edit.addEventListener("click", () => openProductEditor(product));
+        const remove = el("button", "rounded-lg border border-red-100 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50", "Удалить"); remove.type = "button"; remove.addEventListener("click", () => deleteProduct(product.id));
+        row.append(image, details, edit, remove); productList.append(row);
+      }
+      const orderList = byId("adminOrderList"); orderList.replaceChildren();
+      if (!state.orders.length) orderList.append(el("p", "rounded-xl bg-slate-50 p-6 text-center text-sm text-slate-500", "Заказов пока нет."));
+      const statusNames = { new: "Новый", processing: "В обработке", shipped: "Отправлен", completed: "Выполнен", cancelled: "Отменён" };
+      for (const order of state.orders) {
+        const card = el("article", "rounded-2xl border border-slate-100 p-4");
+        const top = el("div", "flex flex-wrap items-start justify-between gap-3");
+        const info = el("div"); info.append(el("h4", "font-bold", `${order.id} · ${order.customerName}`), el("p", "mt-1 text-xs text-slate-500", `${order.phone} · ${order.address}`), el("p", "mt-1 text-xs text-slate-500", new Date(order.createdAt).toLocaleString("ru-KZ")));
+        const control = el("div", "flex items-center gap-2");
+        control.append(el("span", "text-sm font-extrabold text-violet-700", formatMoney(order.total)));
+        const select = el("select", "rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs font-semibold"); select.setAttribute("aria-label", `Статус заказа ${order.id}`);
+        for (const [value, label] of Object.entries(statusNames)) { const option = el("option", "", label); option.value = value; option.selected = order.status === value; select.append(option); }
+        select.addEventListener("change", () => {
+          if (order.status !== "cancelled" && select.value === "cancelled") {
+            const canRestore = order.items.every(item => state.products.some(product => product.id === item.productId));
+            if (!canRestore) { toast("Нельзя отменить заказ: часть товаров удалена из каталога.", "error"); select.value = order.status; return; }
+            for (const item of order.items) state.products.find(product => product.id === item.productId).stock += item.quantity;
+          } else if (order.status === "cancelled" && select.value !== "cancelled") {
+            const restockAvailable = order.items.every(item => {
+              const product = state.products.find(candidate => candidate.id === item.productId);
+              return product && product.stock >= item.quantity;
+            });
+            if (!restockAvailable) { toast("Нельзя восстановить заказ: на складе недостаточно товара.", "error"); select.value = order.status; return; }
+            for (const item of order.items) state.products.find(product => product.id === item.productId).stock -= item.quantity;
+          }
+          order.status = select.value; persist(); renderAdmin(); renderProducts(); toast("Статус заказа обновлён");
+        });
+        control.append(select); top.append(info, control); card.append(top);
+        const lines = order.items.map(item => `${item.name} × ${item.quantity}`).join(" · ");
+        card.append(el("p", "mt-3 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-500", lines));
+        if (order.comment) card.append(el("p", "mt-2 text-xs text-slate-500", `Комментарий: ${order.comment}`));
+        orderList.append(card);
+      }
+    }
+    function openProductEditor(product = null) {
+      byId("productError").classList.add("hidden");
+      const select = byId("productCategory"); select.replaceChildren();
+      for (const category of CATEGORIES.filter(item => item.id !== "all")) { const option = el("option", "", category.name); option.value = category.id; select.append(option); }
+      byId("editProductId").value = product?.id || "";
+      byId("productEditorTitle").textContent = product ? "Изменить товар" : "Новый товар";
+      byId("productName").value = product?.name || "";
+      byId("productCategory").value = product?.category || "phones";
+      byId("productDescription").value = product?.description || "";
+      byId("productPrice").value = product?.price ?? "";
+      byId("productStock").value = product?.stock ?? "";
+      byId("productImage").value = product?.image || "";
+      dialogOpen(byId("productDialog"));
+    }
+    byId("adminButton").addEventListener("click", () => {
+      if (currentUser()?.role !== "admin") { toast("Доступ только для администратора.", "error"); return; }
+      renderAdmin(); dialogOpen(byId("adminDialog"));
+    });
+    byId("addProductButton").addEventListener("click", () => openProductEditor());
+    document.querySelectorAll("[data-admin-tab]").forEach(button => button.addEventListener("click", () => {
+      const orders = button.dataset.adminTab === "orders";
+      document.querySelectorAll("[data-admin-tab]").forEach(tab => {
+        const active = tab === button; tab.setAttribute("aria-selected", String(active));
+        tab.className = `admin-tab pb-3 text-sm font-bold ${active ? "" : "text-slate-500"}`;
+      });
+      byId("adminProductsPanel").classList.toggle("hidden", orders);
+      byId("adminOrdersPanel").classList.toggle("hidden", !orders);
+    }));
+    byId("productForm").addEventListener("submit", event => {
+      event.preventDefault();
+      if (currentUser()?.role !== "admin") { showFormError("productError", "Требуется вход администратора."); return; }
+      const name = safeText(byId("productName").value, 100);
+      const category = byId("productCategory").value;
+      const description = safeText(byId("productDescription").value, 240);
+      const price = Number(byId("productPrice").value);
+      const stock = Number(byId("productStock").value);
+      const imageInput = byId("productImage").value.trim();
+      const image = validImage(imageInput) || (imageInput ? "" : `https://images.unsplash.com/${PHOTO_IDS[category][0]}?auto=format&fit=crop&w=700&q=80`);
+      if (name.length < 2 || description.length < 3 || !CATEGORIES.some(item => item.id === category && item.id !== "all")) { showFormError("productError", "Проверьте название, категорию и описание товара."); return; }
+      if (!Number.isSafeInteger(price) || price < 1 || price > 100000000 || !Number.isSafeInteger(stock) || stock < 0 || stock > 100000) { showFormError("productError", "Цена и остаток должны быть целыми числами в допустимом диапазоне."); return; }
+      if (imageInput && !image) { showFormError("productError", "Укажите корректную ссылку изображения с HTTPS."); return; }
+      const id = byId("editProductId").value;
+      if (id) {
+        const existing = state.products.find(item => item.id === id);
+        if (!existing) { showFormError("productError", "Товар не найден. Обновите список."); return; }
+        Object.assign(existing, { name, category, description, price, stock, image });
+      } else {
+        state.products.unshift({ id: `custom-${uid()}`, name, category, description, price, stock, rating: 4.8, image });
+      }
+      persist(); closeDialog("productDialog"); renderAdmin(); renderProducts(); toast(id ? "Товар обновлён" : "Товар добавлен");
+    });
+    function deleteProduct(productId) {
+      const hasOrder = state.orders.some(order => order.status !== "cancelled" && order.items.some(item => item.productId === productId));
+      if (hasOrder) { toast("Нельзя удалить товар из активного заказа. Сначала отмените заказ.", "error"); return; }
+      state.products = state.products.filter(product => product.id !== productId);
+      state.cart = state.cart.filter(item => item.productId !== productId);
+      persist(); updateHeader(); renderAdmin(); renderProducts(); toast("Товар удалён");
+    }
+    byId("authButton").setAttribute("aria-label", "Войти или выйти из аккаунта");
+    renderCategories(); renderProducts(); updateHeader();
+    if (storageWarning) window.setTimeout(() => toast(storageWarning, "error"), 0);
+  </script>
+</body>
+</html>
