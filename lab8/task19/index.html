@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задание 19. Личный бюджет</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+<h1>Задание 19. Личный бюджет</h1>
+<p class="sub">Доходы и расходы по категориям, месячная сводка. Операции можно редактировать и удалять.</p>
+<div class="row"><select id="type"><option value="income">Доход</option><option value="expense">Расход</option></select><input id="category" placeholder="Категория"><input id="amount" type="number" min="0" step="0.01" placeholder="Сумма"><input id="date" type="date"><button id="add">Добавить</button></div><p class="err"></p><div class="row"><span class="muted">Месяц:</span><select id="month"></select></div><div class="card"><span class="stat" id="inc"></span><span class="stat" id="exp"></span><span class="stat" id="bal"></span></div><ul id="list"></ul>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

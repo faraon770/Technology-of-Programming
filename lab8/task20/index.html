@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задание 20. Менеджер проектов</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+<h1>Задание 20. Менеджер проектов</h1>
+<p class="sub">Проекты с вложенными задачами, статусами и сроками. Есть поиск и удаление.</p>
+<div class="row"><input id="pname" placeholder="Название проекта"><button id="addp">Создать проект</button></div><div class="row"><select id="proj"></select><input id="ttitle" placeholder="Задача"><select id="status"><option value="new">Новая</option><option value="work">В работе</option><option value="done">Готово</option></select><input id="deadline" type="date"><button id="addt">Добавить задачу</button></div><p class="err"></p><div class="row"><input id="search" placeholder="Поиск задач по названию"></div><div id="board"></div>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

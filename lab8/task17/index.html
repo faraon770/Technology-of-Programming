@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задание 17. Мастер заявки</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+<h1>Задание 17. Мастер заявки</h1>
+<p class="sub">Заявка из трёх шагов. Черновик — в sessionStorage, отправленные заявки — в localStorage.</p>
+<div class="card"><div class="step" data-step="0"><div class="row"><input id="name" placeholder="ФИО"><input id="group" placeholder="Группа"></div></div><div class="step hidden" data-step="1"><div class="row"><input id="subject" placeholder="Предмет"><input id="date" type="date"></div></div><div class="step hidden" data-step="2"><div class="row"><textarea id="comment" placeholder="Комментарий (необязательно)"></textarea></div></div></div><p class="err"></p><div class="row"><span class="muted" id="prog"></span></div><div class="row"><button id="back" class="alt">Назад</button><button id="next">Далее</button><button id="submit">Отправить заявку</button></div><h3>Отправленные заявки</h3><ul id="apps"></ul>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

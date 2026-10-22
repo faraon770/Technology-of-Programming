@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задание 3. Настройки темы</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+<h1>Задание 3. Настройки темы</h1>
+<p class="sub">Светлая или тёмная тема и размер текста. Настройки сохраняются.</p>
+<div class="row"><select id="theme"><option value="light">Светлая тема</option><option value="dark">Тёмная тема</option></select></div><div class="row"><span class="muted">Размер текста</span><input type="range" id="size" min="12" max="24"><span id="sv" class="tag"></span></div><div class="card"><p id="preview">Пример текста, который меняет размер в зависимости от настроек.</p></div>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

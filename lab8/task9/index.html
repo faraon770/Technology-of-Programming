@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задание 9. Учёт расходов</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+<h1>Задание 9. Учёт расходов</h1>
+<p class="sub">Категория, сумма и дата. Операции сохраняются, общий расход считается автоматически.</p>
+<div class="row"><select id="cat"><option>Еда</option><option>Транспорт</option><option>Учёба</option><option>Развлечения</option><option>Другое</option></select><input id="sum" type="number" min="0" step="0.01" placeholder="Сумма"><input id="date" type="date"><button id="add">Добавить</button></div><p class="err"></p><div class="card"><span class="muted">Общий расход</span><div class="big" id="total">0</div></div><ul id="list"></ul>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

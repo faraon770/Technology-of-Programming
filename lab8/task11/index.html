@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задание 11. Корзина магазина</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+<h1>Задание 11. Корзина магазина</h1>
+<p class="sub">Товары, цена и количество. Корзина сохраняется, итог пересчитывается.</p>
+<div class="row"><select id="prod"></select><input id="qty" type="number" min="1" value="1"><button id="add">В корзину</button></div><p class="err"></p><ul id="list"></ul><div class="card"><span class="muted">Итого к оплате</span><div class="big" id="total">0 ₸</div></div><button id="clear" class="ghost">Очистить корзину</button>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

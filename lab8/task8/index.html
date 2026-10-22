@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задание 8. To-Do</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+<h1>Задание 8. To-Do</h1>
+<p class="sub">Задачи со статусом, фильтр и удаление. Массив объектов хранится в localStorage.</p>
+<div class="row"><input id="t" placeholder="Новая задача"><button id="add">Добавить</button></div><div class="row"><select id="filter"><option value="all">Все</option><option value="active">Активные</option><option value="done">Выполненные</option></select></div><p class="err"></p><ul id="list"></ul><p class="muted" id="cnt"></p>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

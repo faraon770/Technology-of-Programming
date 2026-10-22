@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задание 12. Таблица студентов</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+<h1>Задание 12. Таблица студентов</h1>
+<p class="sub">ФИО, группа и балл. Добавление, удаление и сохранение строк.</p>
+<div class="row"><input id="fio" placeholder="ФИО"><input id="group" placeholder="Группа"><input id="score" type="number" min="0" max="100" placeholder="Балл"><button id="add">Добавить</button></div><p class="err"></p><table><thead><tr><th>ФИО</th><th>Группа</th><th>Балл</th><th></th></tr></thead><tbody id="rows"></tbody></table><p class="muted" id="avg"></p>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>
