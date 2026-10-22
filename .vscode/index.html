@@ -1,0 +1,1701 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111024">
+  <meta name="description" content="Ramz Store — электроника, которую выбирают с удовольствием.">
+  <title>Ramz Store — техника для вашего ритма</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#111024",
+            violet: { 50: "#f4f1ff", 100: "#e9e2ff", 500: "#7555ee", 600: "#6241dc", 700: "#5032bf" }
+          },
+          fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"] }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --ink: #111024; --muted: #77758a; --violet: #7555ee; --line: #eeedf3; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); font-family: "DM Sans", sans-serif; background: #fbfaff; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #a995ff; outline-offset: 3px; }
+    .display { font-family: "Manrope", sans-serif; }
+    .shell { width: min(1240px, calc(100% - 48px)); margin-inline: auto; }
+    .top-note { background: #201b40; color: #ded9fa; font-size: 12px; letter-spacing: .02em; }
+    .site-header { background: #111024; color: white; position: sticky; z-index: 20; top: 0; }
+    .search-wrap { background: #211f35; border: 1px solid #37344c; }
+    .search-wrap:focus-within { border-color: #917cff; box-shadow: 0 0 0 3px #7555ee30; }
+    .hero { background: radial-gradient(ellipse at 78% 30%, #6946d68c 0, transparent 38%), radial-gradient(ellipse at 45% 110%, #293c89 0, transparent 52%), #141229; overflow: hidden; }
+    .hero::after { content: ""; position: absolute; inset: 0; opacity: .2; pointer-events: none; background-image: radial-gradient(#c4b9ff 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(90deg, transparent, black); }
+    .hero-visual { position: absolute; inset: 0 0 0 48%; background: url("https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1300&q=85") center 45%/cover; opacity: .42; mask-image: linear-gradient(90deg, transparent 0%, black 42%); }
+    .hero-orb { position: absolute; width: 390px; height: 390px; border-radius: 50%; right: 13%; top: 4%; background: #8d70ff22; filter: blur(4px); box-shadow: 0 0 120px #7754fa55; }
+    .hero-content { position: relative; z-index: 1; }
+    .category-chip { transition: .2s ease; }
+    .category-chip[aria-pressed="true"] { background: #17142a; color: white; border-color: #17142a; box-shadow: 0 6px 16px #11102418; }
+    .product-card { transition: transform .24s ease, box-shadow .24s ease; }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 18px 42px #20153e12; }
+    .product-image { background: linear-gradient(135deg, #f3f0ff, #f8f7fb); }
+    .product-image img { transition: transform .5s ease; }
+    .product-card:hover .product-image img { transform: scale(1.06); }
+    .image-fallback { display: grid; place-items: center; min-height: 100%; padding: 1rem; text-align: center; }
+    dialog { color: var(--ink); border: 0; padding: 0; border-radius: 24px; box-shadow: 0 28px 90px #100b2c35; max-height: min(90dvh, 900px); }
+    dialog::backdrop { background: #100d20a6; backdrop-filter: blur(5px); }
+    .modal-scroll { max-height: min(90dvh, 900px); overflow-y: auto; }
+    .toast { animation: toast-in .25s ease both; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { animation: fade-up .55s ease both; }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .nav-link { transition: color .2s; }
+    .nav-link:hover { color: #c8bcff; }
+    .stock-low { color: #bd5b35; }
+    .admin-tab[aria-selected="true"] { color: #6241dc; border-bottom: 2px solid #7555ee; }
+    .field { width: 100%; border: 1px solid #e7e5ee; border-radius: 12px; padding: 12px 14px; background: white; color: var(--ink); }
+    .field:focus { border-color: #8c75ee; outline: 3px solid #7555ee20; }
+    .btn-primary { border: 0; border-radius: 12px; padding: 12px 18px; background: #7555ee; color: white; font-weight: 700; transition: .2s; }
+    .btn-primary:hover { background: #6241dc; transform: translateY(-1px); }
+    .btn-primary:disabled { background: #bdb7cf; cursor: not-allowed; transform: none; }
+    .icon-btn { display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; color: inherit; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    @media (max-width: 640px) {
+      .shell { width: min(100% - 32px, 1240px); }
+      .hero-visual { inset: 0 0 0 26%; opacity: .25; }
+      dialog { width: calc(100% - 24px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-note">
+    <div class="shell flex min-h-9 items-center justify-center gap-2 text-center">
+      <span aria-hidden="true">✦</span><span>Бесплатная доставка от 50 000 ₸</span><span class="hidden sm:inline text-violet-200">·</span><span class="hidden sm:inline">Поддержка каждый день с 9:00 до 21:00</span>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="shell flex min-h-[76px] items-center gap-5">
+      <a href="#" class="display flex shrink-0 items-center gap-2.5 text-xl font-extrabold tracking-tight text-white" aria-label="Ramz Store — на главную">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-violet-500 text-lg">R</span><span>ramz<span class="text-violet-300">.</span></span>
+      </a>
+      <nav class="hidden items-center gap-5 text-sm text-slate-300 lg:flex" aria-label="Основная навигация">
+        <a class="nav-link" href="#catalog">Каталог</a><a class="nav-link" href="#advantages">О магазине</a>
+      </nav>
+      <label class="search-wrap ml-auto flex h-11 min-w-0 max-w-[450px] flex-1 items-center gap-2.5 rounded-xl px-3.5">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input id="searchInput" class="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-400" type="search" placeholder="Поиск по каталогу…" autocomplete="off" aria-label="Поиск товаров">
+        <kbd class="hidden rounded border border-slate-600 px-1.5 py-0.5 text-[10px] text-slate-400 sm:inline">⌘ K</kbd>
+      </label>
+      <div class="flex shrink-0 items-center gap-2">
+        <label class="sr-only" for="languageSelect">Язык сайта</label>
+        <select id="languageSelect" class="h-9 max-w-16 rounded-lg border border-slate-600 bg-ink px-1 text-xs font-semibold text-white" aria-label="Язык сайта">
+          <option value="ru">RU</option><option value="kk">ҚАЗ</option><option value="en">EN</option>
+        </select>
+        <button id="accountButton" class="hidden h-10 rounded-xl px-2 text-sm text-slate-200 transition hover:bg-white/10 sm:px-3" type="button">Мои покупки</button>
+        <button id="authButton" class="flex h-10 items-center gap-2 rounded-xl px-2 text-sm text-slate-200 transition hover:bg-white/10 sm:px-3" type="button">
+          <span aria-hidden="true">♙</span><span id="authButtonLabel" class="hidden sm:inline">Войти</span>
+        </button>
+        <button id="adminButton" class="hidden h-10 items-center gap-2 rounded-xl px-3 text-sm text-violet-200 transition hover:bg-white/10" type="button">⚙ <span class="hidden md:inline">Админ</span></button>
+        <button id="cartButton" class="relative grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-white transition hover:bg-white/20" type="button" aria-label="Открыть корзину">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L20.5 8H6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19" r="1.3" fill="currentColor"/><circle cx="17.5" cy="19" r="1.3" fill="currentColor"/></svg>
+          <span id="cartBadge" class="absolute -right-1 -top-1 hidden min-w-5 rounded-full bg-violet-500 px-1 text-center text-[10px] font-bold leading-5 text-white">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell pt-6 sm:pt-8">
+      <div class="hero relative min-h-[390px] overflow-hidden rounded-[28px] text-white sm:min-h-[440px]">
+        <div class="hero-visual" aria-hidden="true"></div><div class="hero-orb" aria-hidden="true"></div>
+        <div class="hero-content flex min-h-[390px] items-center px-7 py-12 sm:min-h-[440px] sm:px-14">
+          <div class="max-w-[570px] fade-up">
+            <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-violet-100"><span class="h-1.5 w-1.5 rounded-full bg-emerald-300"></span>ТЕХНОЛОГИИ НА КАЖДЫЙ ДЕНЬ</div>
+            <h1 class="display text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl">Твой мир.<br><span class="text-violet-300">Твои правила.</span></h1>
+            <p class="mt-5 max-w-md text-sm leading-6 text-slate-300 sm:text-base">Выбирай технику, которая помогает быть собой. Только проверенные бренды, честные цены и забота о каждой детали.</p>
+            <div class="mt-7 flex flex-wrap items-center gap-3">
+              <a href="#catalog" class="inline-flex h-12 items-center gap-2 rounded-xl bg-violet-500 px-5 text-sm font-bold text-white transition hover:bg-violet-600">Выбрать технику <span aria-hidden="true">↗</span></a>
+              <div class="flex items-center gap-2.5 text-xs text-slate-300"><span class="flex -space-x-2"><i class="grid h-7 w-7 place-items-center rounded-full border-2 border-ink bg-orange-200 not-italic">😊</i><i class="grid h-7 w-7 place-items-center rounded-full border-2 border-ink bg-blue-200 not-italic">🙂</i><i class="grid h-7 w-7 place-items-center rounded-full border-2 border-ink bg-violet-200 not-italic">😎</i></span><span>Выбор 2 000+ покупателей</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-content absolute bottom-5 right-7 hidden items-center gap-2 text-xs text-white/65 sm:flex"><span class="h-px w-8 bg-white/40"></span>Найди то, что вдохновляет</div>
+      </div>
+    </section>
+
+    <section id="advantages" class="shell grid grid-cols-2 gap-3 py-6 sm:grid-cols-4 sm:py-8">
+      <div class="flex items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-lg">✦</span><div><p class="text-sm font-bold">Оригинальная техника</p><p class="mt-0.5 text-xs text-slate-500">Только проверенные товары</p></div></div>
+      <div class="flex items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-lg">↗</span><div><p class="text-sm font-bold">Быстрая доставка</p><p class="mt-0.5 text-xs text-slate-500">По всему Казахстану</p></div></div>
+      <div class="flex items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-lg">♡</span><div><p class="text-sm font-bold">Гарантия качества</p><p class="mt-0.5 text-xs text-slate-500">Помогаем после покупки</p></div></div>
+      <div class="flex items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-lg">₸</span><div><p class="text-sm font-bold">Честные цены</p><p class="mt-0.5 text-xs text-slate-500">Удобная оплата при получении</p></div></div>
+    </section>
+
+    <section id="catalog" class="shell pb-20 pt-3">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div><p class="mb-2 text-xs font-bold uppercase tracking-[.18em] text-violet-600">НАШ ВЫБОР</p><h2 class="display text-3xl font-extrabold tracking-tight sm:text-4xl">Каталог техники</h2><p class="mt-2 text-sm text-slate-500">Всё нужное — в одном месте. Выбирай с удовольствием.</p></div>
+        <label class="flex items-center gap-2 text-sm text-slate-500">Сортировка
+          <select id="sortSelect" class="rounded-xl border border-violet-100 bg-white px-3 py-2.5 text-sm font-semibold text-ink"><option value="popular">Сначала популярные</option><option value="price-asc">Сначала дешевле</option><option value="price-desc">Сначала дороже</option><option value="rating">По рейтингу</option></select>
+        </label>
+      </div>
+      <div id="categoryList" class="mt-7 flex gap-2 overflow-x-auto pb-2" role="group" aria-label="Фильтр по категории"></div>
+      <div class="mt-3 flex items-center justify-between"><p id="resultCount" class="text-sm text-slate-500" aria-live="polite"></p><button id="clearFilters" class="hidden text-sm font-semibold text-violet-600 hover:text-violet-800" type="button">Сбросить фильтры</button></div>
+      <div id="productGrid" class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5"></div>
+    </section>
+  </main>
+  <footer class="bg-ink text-white">
+    <div class="shell flex flex-col gap-8 py-10 sm:flex-row sm:items-center sm:justify-between">
+      <div><a href="#" class="display text-xl font-extrabold">ramz<span class="text-violet-300">.</span></a><p class="mt-2 max-w-sm text-sm text-slate-400">Техника для твоего ритма. Выбирай, вдохновляйся, создавай.</p></div>
+      <div class="text-sm text-slate-400"><p>Пн–Вс · 9:00–21:00</p><p class="mt-1">Учебный демонстрационный магазин</p><p class="mt-1 text-xs text-slate-500">Учётные записи, роли, остатки и заказы демонстрационные: данные LocalStorage можно подменить, реальной авторизации и складской гарантии нет.</p></div>
+      <p class="text-xs text-slate-500">© Ramz Store, 2025</p>
+    </div>
+  </footer>
+
+  <dialog id="authDialog" aria-labelledby="authTitle">
+    <div class="modal-scroll w-full max-w-[440px] p-6 sm:p-8">
+      <div class="flex items-start justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">РАДЫ ВИДЕТЬ</p><h2 id="authTitle" class="display mt-2 text-2xl font-extrabold">Войти в аккаунт</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="authDialog" aria-label="Закрыть">×</button></div>
+      <div class="mt-5 grid grid-cols-2 rounded-xl bg-slate-100 p-1"><button id="loginTab" class="rounded-lg bg-white py-2 text-sm font-bold shadow-sm" type="button">Войти</button><button id="registerTab" class="rounded-lg py-2 text-sm font-semibold text-slate-500" type="button">Создать аккаунт</button></div>
+      <form id="authForm" class="mt-5 space-y-4" novalidate>
+        <div id="authNameGroup" class="hidden space-y-3">
+          <div><label for="authFirstName" class="mb-1.5 block text-sm font-semibold">Имя</label><input class="field" id="authFirstName" name="firstName" autocomplete="given-name" maxlength="40" placeholder="Например, Айдана" aria-describedby="authFirstNameError"><p id="authFirstNameError" class="hidden mt-1 text-xs text-red-600" role="alert"></p></div>
+          <div><label for="authLastName" class="mb-1.5 block text-sm font-semibold">Фамилия</label><input class="field" id="authLastName" name="lastName" autocomplete="family-name" maxlength="40" placeholder="Например, Садыкова" aria-describedby="authLastNameError"><p id="authLastNameError" class="hidden mt-1 text-xs text-red-600" role="alert"></p></div>
+        </div>
+        <div><label for="authEmail" class="mb-1.5 block text-sm font-semibold">Электронная почта</label><input class="field" id="authEmail" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="name@example.com" aria-describedby="authEmailError"><p id="authEmailError" class="hidden mt-1 text-xs text-red-600" role="alert"></p></div>
+        <div><label for="authPassword" class="mb-1.5 block text-sm font-semibold">Пароль</label><div class="flex gap-2"><input class="field min-w-0" id="authPassword" name="password" type="password" autocomplete="current-password" minlength="6" maxlength="128" required placeholder="Пароль" aria-describedby="authPasswordError"><button id="togglePassword" class="shrink-0 rounded-xl border border-slate-200 px-3 text-xs font-semibold" type="button" aria-label="Показать пароль" aria-pressed="false">Показать</button></div><p id="authPasswordError" class="hidden mt-1 text-xs text-red-600" role="alert"></p></div>
+        <div id="confirmPasswordGroup" class="hidden"><label for="authPasswordConfirm" class="mb-1.5 block text-sm font-semibold">Подтвердите пароль</label><div class="flex gap-2"><input class="field min-w-0" id="authPasswordConfirm" type="password" autocomplete="new-password" maxlength="128" placeholder="Повторите пароль" aria-describedby="authConfirmError"><button id="toggleConfirmPassword" class="shrink-0 rounded-xl border border-slate-200 px-3 text-xs font-semibold" type="button" aria-label="Показать подтверждение пароля" aria-pressed="false">Показать</button></div><p id="authConfirmError" class="hidden mt-1 text-xs text-red-600" role="alert"></p></div>
+        <p id="authError" class="hidden text-sm font-medium text-red-600" role="alert"></p>
+        <button class="btn-primary w-full" type="submit"><span id="authSubmitLabel">Войти</span></button>
+      </form>
+      <p class="mt-4 text-[11px] leading-4 text-slate-400">Демонстрация: учётные записи, роли и заказы находятся в LocalStorage и доступны для изменения через DevTools. Это не обеспечивает реальную безопасность. Не используйте реальные пароли.</p>
+    </div>
+  </dialog>
+
+  <dialog id="cartDialog" aria-labelledby="cartTitle">
+    <div class="modal-scroll w-full max-w-[620px] p-5 sm:p-7">
+      <div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">ВАШ ВЫБОР</p><h2 id="cartTitle" class="display mt-1 text-2xl font-extrabold">Корзина</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="cartDialog" aria-label="Закрыть корзину">×</button></div>
+      <div id="cartContent" class="mt-5"></div>
+    </div>
+  </dialog>
+
+  <dialog id="checkoutDialog" aria-labelledby="checkoutTitle">
+    <div class="modal-scroll w-full max-w-[520px] p-6 sm:p-8">
+      <div class="flex items-start justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">ПОСЛЕДНИЙ ШАГ</p><h2 id="checkoutTitle" class="display mt-2 text-2xl font-extrabold">Оформление заказа</h2><p class="mt-1 text-sm text-slate-500">Оплата наличными при получении</p></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="checkoutDialog" aria-label="Закрыть">×</button></div>
+      <form id="checkoutForm" class="mt-6 space-y-4" novalidate>
+        <div><label for="customerName" class="mb-1.5 block text-sm font-semibold">ФИО</label><input class="field" id="customerName" name="fullName" autocomplete="name" maxlength="120" required placeholder="Фамилия Имя Отчество"></div>
+        <div><label for="customerEmail" class="mb-1.5 block text-sm font-semibold">Электронная почта</label><input class="field" id="customerEmail" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="name@example.com" aria-describedby="customerEmailError"><p id="customerEmailError" class="hidden mt-1 text-xs text-red-600" role="alert"></p></div>
+        <div><label for="customerPhone" class="mb-1.5 block text-sm font-semibold">Телефон Казахстана</label><input class="field" id="customerPhone" name="phone" type="tel" autocomplete="tel" maxlength="24" required placeholder="+7 (7__) ___-__-__" aria-describedby="customerPhoneError"><p id="customerPhoneError" class="hidden mt-1 text-xs text-red-600" role="alert"></p></div>
+        <div><label for="customerAddress" class="mb-1.5 block text-sm font-semibold">Адрес доставки</label><textarea class="field resize-y" id="customerAddress" name="address" rows="2" maxlength="300" required placeholder="Город, улица, дом, квартира"></textarea></div>
+        <div><label for="customerComment" class="mb-1.5 block text-sm font-semibold">Комментарий <span class="font-normal text-slate-400">(необязательно)</span></label><textarea class="field resize-y" id="customerComment" name="comment" rows="2" maxlength="500" placeholder="Например, позвонить за час до доставки"></textarea></div>
+        <p id="checkoutError" class="hidden text-sm font-medium text-red-600" role="alert"></p>
+        <div id="checkoutSummary" class="rounded-xl bg-slate-50 p-4"></div>
+        <button class="btn-primary w-full" type="submit">Подтвердить заказ</button>
+        <p class="text-center text-xs text-slate-400">Нажимая кнопку, вы оформляете учебный заказ без реальной оплаты.</p>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog id="adminDialog" aria-labelledby="adminTitle">
+    <div class="modal-scroll w-full max-w-[1000px] p-5 sm:p-8">
+      <div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">УПРАВЛЕНИЕ МАГАЗИНОМ</p><h2 id="adminTitle" class="display mt-1 text-2xl font-extrabold">Панель администратора</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="adminDialog" aria-label="Закрыть панель">×</button></div>
+      <div id="adminMetrics" class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4"></div>
+      <div class="mt-7 flex gap-5 overflow-x-auto border-b border-slate-200">
+        <button class="admin-tab shrink-0 pb-3 text-sm font-bold" type="button" data-admin-tab="products" aria-selected="true">Товары</button>
+        <button class="admin-tab shrink-0 pb-3 text-sm font-bold text-slate-500" type="button" data-admin-tab="orders" aria-selected="false">Заказы</button>
+        <button class="admin-tab shrink-0 pb-3 text-sm font-bold text-slate-500" type="button" data-admin-tab="promos" aria-selected="false">Промокоды</button>
+        <button class="admin-tab shrink-0 pb-3 text-sm font-bold text-slate-500" type="button" data-admin-tab="inventory" aria-selected="false">Склад</button>
+      </div>
+      <section id="adminProductsPanel" class="pt-5"><div class="mb-4 flex items-center justify-between gap-3"><h3 class="text-lg font-bold">Каталог <span id="adminProductCount" class="text-sm font-medium text-slate-400"></span></h3><button id="addProductButton" class="btn-primary px-3 py-2 text-sm" type="button">＋ Добавить товар</button></div><div id="adminProductList" class="space-y-2"></div></section>
+      <section id="adminOrdersPanel" class="hidden pt-5">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3"><h3 class="text-lg font-bold">Заказы</h3><button id="exportOrdersButton" class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold hover:bg-slate-50" type="button">Экспорт CSV</button></div>
+        <div class="mb-4 grid gap-2 sm:grid-cols-2"><input id="orderSearch" class="field py-2.5 text-sm" type="search" placeholder="Поиск по заказу, клиенту, телефону" aria-label="Поиск заказов"><select id="orderStatusFilter" class="field py-2.5 text-sm" aria-label="Фильтр по статусу"><option value="all">Все статусы</option><option value="new">Новый</option><option value="processing">В обработке</option><option value="completed">Завершён</option><option value="cancelled">Отменён</option></select></div>
+        <div id="adminOrderList" class="space-y-3"></div>
+      </section>
+      <section id="adminPromosPanel" class="hidden pt-5">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3"><h3 class="text-lg font-bold">Промокоды</h3><button id="addPromoButton" class="btn-primary px-3 py-2 text-sm" type="button">＋ Добавить промокод</button></div>
+        <form id="promoForm" class="hidden mb-5 grid gap-3 rounded-2xl border border-violet-100 bg-violet-50/50 p-4 sm:grid-cols-2" novalidate>
+          <input id="editPromoId" type="hidden">
+          <label class="text-sm font-semibold">Код<input id="promoCode" class="field mt-1" maxlength="20" required></label>
+          <label class="text-sm font-semibold">Тип скидки<select id="promoType" class="field mt-1"><option value="percent">Процент</option><option value="fixed">Фиксированная сумма (₸)</option></select></label>
+          <label class="text-sm font-semibold">Размер скидки<input id="promoValue" class="field mt-1" type="number" min="1" step="1" required></label>
+          <label class="text-sm font-semibold">Минимальная сумма заказа (₸)<input id="promoMinimum" class="field mt-1" type="number" min="0" step="1" value="0" required></label>
+          <label class="text-sm font-semibold">Начало действия<input id="promoStartsAt" class="field mt-1" type="datetime-local" required></label>
+          <label class="text-sm font-semibold">Окончание действия<input id="promoEndsAt" class="field mt-1" type="datetime-local" required></label>
+          <label class="text-sm font-semibold">Лимит применений<input id="promoLimit" class="field mt-1" type="number" min="1" step="1" required></label>
+          <label class="flex items-center gap-2 text-sm font-semibold"><input id="promoActive" type="checkbox" class="h-4 w-4 accent-violet-600"> Активен</label>
+          <p id="promoError" class="hidden text-sm text-red-600 sm:col-span-2" role="alert"></p>
+          <div class="flex gap-2 sm:col-span-2"><button class="btn-primary" type="submit">Сохранить</button><button id="cancelPromoEdit" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold" type="button">Отмена</button></div>
+        </form>
+        <div id="adminPromoList" class="space-y-2"></div>
+      </section>
+      <section id="adminInventoryPanel" class="hidden pt-5"><h3 class="mb-4 text-lg font-bold">История складских операций</h3><div id="inventoryHistory" class="space-y-2"></div></section>
+      <p class="mt-6 border-t border-slate-100 pt-4 text-xs leading-5 text-slate-500">Демонстрационная панель: проверка роли выполняется только в браузере. LocalStorage можно изменить через DevTools; это не является защитой от подмены данных.</p>
+    </div>
+  </dialog>
+
+  <dialog id="productDialog" aria-labelledby="productEditorTitle">
+    <div class="modal-scroll w-full max-w-[500px] p-6 sm:p-8">
+      <div class="flex items-start justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">КАТАЛОГ</p><h2 id="productEditorTitle" class="display mt-2 text-2xl font-extrabold">Новый товар</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="productDialog" aria-label="Закрыть">×</button></div>
+      <form id="productForm" class="mt-5 space-y-3.5" novalidate>
+        <input type="hidden" id="editProductId">
+        <div><label for="productName" class="mb-1 block text-sm font-semibold">Название</label><input class="field" id="productName" maxlength="100" required></div>
+        <div><label for="productCategory" class="mb-1 block text-sm font-semibold">Категория</label><select class="field" id="productCategory" required></select></div>
+        <div><label for="productColor" class="mb-1 block text-sm font-semibold">Цвет / вариант</label><input class="field" id="productColor" maxlength="60" placeholder="Например, чёрный"></div>
+        <div><label for="productDescription" class="mb-1 block text-sm font-semibold">Описание на русском</label><textarea class="field" id="productDescription" maxlength="240" rows="2" required></textarea></div>
+        <div><label for="productDescriptionKk" class="mb-1 block text-sm font-semibold">Қазақша сипаттама</label><textarea class="field" id="productDescriptionKk" maxlength="240" rows="2" required></textarea></div>
+        <div><label for="productDescriptionEn" class="mb-1 block text-sm font-semibold">Description in English</label><textarea class="field" id="productDescriptionEn" maxlength="240" rows="2" required></textarea></div>
+        <div class="grid grid-cols-2 gap-3"><div><label for="productPrice" class="mb-1 block text-sm font-semibold">Цена, ₸</label><input class="field" id="productPrice" type="number" min="1" max="100000000" step="1" required></div><div><label for="productStock" class="mb-1 block text-sm font-semibold">Остаток, шт.</label><input class="field" id="productStock" type="number" min="0" max="100000" step="1" required></div></div>
+        <div><label for="productImage" class="mb-1 block text-sm font-semibold">URL фото (проверенная модель/цвет)</label><input class="field" id="productImage" type="url" maxlength="500" placeholder="https://…"><div id="productImagePreview" class="image-fallback mt-2 min-h-24 overflow-hidden rounded-xl bg-violet-50 text-sm text-slate-500" aria-live="polite"></div><p class="mt-1 text-xs text-slate-500">При отсутствии сети или ошибке загрузки вместо фото отобразится название товара.</p></div>
+        <p id="productError" class="hidden text-sm font-medium text-red-600" role="alert"></p>
+        <button class="btn-primary w-full" type="submit">Сохранить товар</button>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog id="accountDialog" aria-labelledby="accountTitle">
+    <div class="modal-scroll w-full max-w-[700px] p-5 sm:p-7">
+      <div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-600">ВАШ АККАУНТ</p><h2 id="accountTitle" class="display mt-1 text-2xl font-extrabold">Избранное и заказы</h2></div><button class="icon-btn h-9 w-9 rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200" type="button" data-close="accountDialog" aria-label="Закрыть">×</button></div>
+      <section class="mt-6"><h3 class="mb-3 text-lg font-bold">Избранное</h3><div id="favoriteList" class="grid gap-2 sm:grid-cols-2"></div></section>
+      <section class="mt-7"><h3 class="mb-3 text-lg font-bold">История заказов</h3><div id="userOrderList" class="space-y-3"></div></section>
+      <p class="mt-5 text-xs leading-5 text-slate-500">Статусы и история доступны только в этом браузере и могут быть изменены через DevTools. Заказы демонстрационные.</p>
+    </div>
+  </dialog>
+
+  <div id="toastRegion" class="pointer-events-none fixed bottom-4 right-4 z-50 flex max-w-[calc(100%-32px)] flex-col gap-2" aria-live="polite" aria-atomic="false"></div>
+
+  <script>
+    "use strict";
+    const STORAGE_KEY = "ramz-store-demo-v1";
+    const CATEGORIES = [
+      { id: "all", name: "Весь каталог" },
+      { id: "phones", name: "Смартфоны" },
+      { id: "laptops", name: "Ноутбуки" },
+      { id: "tablets", name: "Планшеты" },
+      { id: "headphones", name: "Наушники" },
+      { id: "accessories", name: "Аксессуары" }
+    ];
+    const SEED = [
+      ["phones", [["Apple iPhone 15 Pro", 599990], ["Samsung Galaxy S24", 449990]]],
+      ["laptops", [["Apple MacBook Air 13 M3", 649990], ["ASUS Zenbook 14 OLED", 589990]]],
+      ["tablets", [["Apple iPad Air 11", 369990], ["Samsung Galaxy Tab S9", 399990]]],
+      ["headphones", [["Sony WH-1000XM5", 189990], ["Apple AirPods Pro 2", 149990]]],
+      ["accessories", [["Apple Watch Series 9", 229990], ["Samsung Galaxy Watch6", 139990]]]
+    ];
+    const PRODUCT_DESCRIPTIONS = {
+      phones: [
+        ["iPhone 15 Pro сочетает выразительный титановый дизайн с универсальной камерой для повседневных кадров.", "iPhone 15 Pro күнделікті түсірілімге арналған әмбебап камераны айқын титан дизайнымен үйлестіреді.", "iPhone 15 Pro pairs a distinctive titanium look with a versatile camera for everyday photos."],
+        ["Galaxy S24 подойдёт тем, кто ценит компактный формат и инструменты для насыщенного рабочего дня.", "Galaxy S24 ықшам өлшем мен қарбалас күнге арналған құралдарды бағалайтындарға лайық.", "Galaxy S24 suits people who value a compact form and tools for busy days."],
+        ["Pixel 8 делает акцент на чистом Android-интерфейсе и удобной обработке снимков прямо на телефоне.", "Pixel 8 таза Android интерфейсіне және суреттерді телефонның өзінде өңдеуге басымдық береді.", "Pixel 8 focuses on a clean Android experience and convenient on-device photo editing."],
+        ["Xiaomi 14 — сбалансированный выбор для тех, кому нужен быстрый смартфон для работы и развлечений.", "Xiaomi 14 жұмыс пен ойын-сауыққа жылдам смартфон іздегендерге теңгерімді таңдау.", "Xiaomi 14 is a balanced pick for anyone wanting a responsive phone for work and play."],
+        ["iPhone 15 предлагает узнаваемую экосистему Apple и простое решение для ежедневных задач.", "iPhone 15 Apple экожүйесін және күнделікті міндеттерге ыңғайлы шешімді ұсынады.", "iPhone 15 brings Apple's familiar ecosystem into an easy everyday companion."],
+        ["Galaxy A55 рассчитан на насыщенный день: общение, просмотр контента и привычные приложения.", "Galaxy A55 қарбалас күнге: байланысқа, контент көруге және күнделікті қолданбаларға арналған.", "Galaxy A55 is ready for a full day of messaging, streaming, and everyday apps."],
+        ["OnePlus 12 понравится тем, кто предпочитает отзывчивый интерфейс и выразительный современный дизайн.", "OnePlus 12 жылдам интерфейс пен заманауи айқын дизайнды ұнататындарға жарайды.", "OnePlus 12 is for users who prefer a responsive interface and a bold modern design."],
+        ["Redmi Note 13 Pro помогает оставаться на связи и снимать памятные моменты без лишних настроек.", "Redmi Note 13 Pro артық баптаусыз байланыста болуға және естелік сәттерді түсіруге көмектеседі.", "Redmi Note 13 Pro keeps daily communication and spontaneous photos straightforward."],
+        ["Nothing Phone (2a) выделяется минималистичной эстетикой и аккуратным интерфейсом для повседневного использования.", "Nothing Phone (2a) минималистік стилімен және күнделікті қолдануға ыңғайлы интерфейсімен ерекшеленеді.", "Nothing Phone (2a) stands out with minimalist styling and a tidy everyday interface."],
+        ["HONOR Magic6 Pro создан для тех, кто хочет объединить деловые задачи, съёмку и отдых в одном устройстве.", "HONOR Magic6 Pro жұмыс, түсірілім және демалысты бір құрылғыда біріктіргісі келетіндерге арналған.", "HONOR Magic6 Pro brings work, photography, and downtime together in one device."]
+      ],
+      laptops: [
+        ["MacBook Air 13 с M3 — лёгкий спутник для учёбы, поездок и повседневных проектов в экосистеме Apple.", "M3 чипі бар MacBook Air 13 — Apple экожүйесіндегі оқу, сапар және күнделікті жобаларға жеңіл серік.", "The M3 MacBook Air 13 is a light Apple companion for study, travel, and everyday projects."],
+        ["Zenbook 14 OLED подойдёт для мобильной работы, когда важны компактность и комфортный просмотр.", "Zenbook 14 OLED ықшамдық пен жайлы экран маңызды болатын мобильді жұмысқа лайық.", "Zenbook 14 OLED fits mobile work where portability and a comfortable viewing experience matter."],
+        ["Yoga Slim 7 рассчитан на гибкий график: домашний офис, занятия и задачи в дороге.", "Yoga Slim 7 икемді күн тәртібіне: үйдегі жұмысқа, сабаққа және жолдағы міндеттерге арналған.", "Yoga Slim 7 is suited to a flexible routine of home office, study, and work on the go."],
+        ["Pavilion Plus 14 станет универсальной основой для документов, видеосвязи и домашнего досуга.", "Pavilion Plus 14 құжаттарға, бейнеқоңырауларға және үйдегі демалысқа әмбебап негіз болады.", "Pavilion Plus 14 is a versatile base for documents, video calls, and relaxing at home."],
+        ["Swift Go 14 удобно брать с собой на встречи и занятия, сохраняя привычный рабочий ритм.", "Swift Go 14 кездесулер мен сабақтарға алып жүруге ыңғайлы, жұмыс ырғағын сақтауға көмектеседі.", "Swift Go 14 travels easily to classes and meetings while keeping your routine moving."],
+        ["MacBook Pro 14 создан для продолжительных творческих сессий и серьёзных рабочих задач.", "MacBook Pro 14 ұзақ шығармашылық сессиялар мен күрделі жұмыс міндеттеріне арналған.", "MacBook Pro 14 is built for extended creative sessions and demanding work."],
+        ["ROG Zephyrus G14 объединяет игровой характер и портативный формат для разных сценариев использования.", "ROG Zephyrus G14 ойынға тән мінезді ықшам форматпен біріктіріп, әртүрлі жағдайға бейімделеді.", "ROG Zephyrus G14 combines a gaming spirit with a portable form for varied use."],
+        ["IdeaPad Slim 5 — практичный ноутбук для учёбы, видеозвонков и повседневных домашних дел.", "IdeaPad Slim 5 оқу, бейнеқоңырау және күнделікті үй жұмыстарына арналған практикалық ноутбук.", "IdeaPad Slim 5 is a practical laptop for study, video calls, and everyday home tasks."],
+        ["MSI Modern 15 помогает организовать рабочее место для таблиц, общения и личных проектов.", "MSI Modern 15 кестелерге, байланысқа және жеке жобаларға арналған жұмыс орнын ұйымдастырады.", "MSI Modern 15 helps organize a workspace for spreadsheets, communication, and personal projects."],
+        ["MateBook D 16 подойдёт тем, кто предпочитает просторный формат для многозадачной работы.", "MateBook D 16 көп тапсырмалы жұмысқа кең форматты қалайтындарға қолайлы.", "MateBook D 16 is a good fit for people who prefer a spacious setup for multitasking."]
+      ],
+      tablets: [
+        ["iPad Air 11 удобен для заметок, чтения и творческих занятий в привычной среде Apple.", "iPad Air 11 Apple ортасында жазбаға, оқуға және шығармашылық сабақтарға ыңғайлы.", "iPad Air 11 makes notes, reading, and creative sessions feel natural in the Apple ecosystem."],
+        ["Galaxy Tab S9 поможет переключаться между чтением, просмотром видео и рабочими задачами.", "Galaxy Tab S9 оқу, бейне көру және жұмыс тапсырмалары арасында ауысуға көмектеседі.", "Galaxy Tab S9 moves easily between reading, video, and work tasks."],
+        ["Xiaomi Pad 6 подойдёт для домашних сериалов, онлайн-занятий и ежедневного просмотра сайтов.", "Xiaomi Pad 6 үйдегі сериалдарға, онлайн сабақтарға және күнделікті сайт қарауға лайық.", "Xiaomi Pad 6 suits home streaming, online classes, and everyday browsing."],
+        ["iPad 10.9 — понятный планшет для семейного контента, заметок и привычных приложений.", "iPad 10.9 отбасылық контентке, жазбаларға және таныс қолданбаларға арналған ыңғайлы планшет.", "iPad 10.9 is an approachable tablet for family content, notes, and familiar apps."],
+        ["Tab P12 помогает удобно читать, учиться и делиться экраном во время совместных занятий.", "Tab P12 оқуға, үйренуге және бірге сабақ кезінде экранды бөлісуге ыңғайлы.", "Tab P12 supports comfortable reading, learning, and sharing a screen during group study."],
+        ["MatePad 11.5 подходит для мобильных заметок и просмотра материалов вне рабочего стола.", "MatePad 11.5 жұмыс үстелінен тыс жерде жазба жасауға және материал қарауға қолайлы.", "MatePad 11.5 is handy for mobile notes and reviewing material away from a desk."],
+        ["Galaxy Tab A9+ — удобный семейный экран для чтения, общения и отдыха после дел.", "Galaxy Tab A9+ оқуға, байланысқа және күн соңындағы демалысқа арналған отбасылық экран.", "Galaxy Tab A9+ is a shared family screen for reading, chatting, and winding down."],
+        ["iPad Pro 11 помогает собрать мобильное место для сложных проектов и творческой работы.", "iPad Pro 11 күрделі жобалар мен шығармашылық жұмысқа арналған мобильді орынды толықтырады.", "iPad Pro 11 helps create a mobile setup for involved projects and creative work."],
+        ["HONOR Pad 9 создан для комфортного просмотра лекций, чтения и видеоконтента дома.", "HONOR Pad 9 үйде дәрістерді көруге, оқуға және бейне контентті тамашалауға ыңғайлы.", "HONOR Pad 9 is made for comfortable lectures, reading, and video at home."],
+        ["OnePlus Pad Go станет лёгким помощником для повседневного чтения и онлайн-развлечений.", "OnePlus Pad Go күнделікті оқуға және онлайн ойын-сауыққа жеңіл көмекші болады.", "OnePlus Pad Go is a lightweight companion for daily reading and online entertainment."]
+      ],
+      headphones: [
+        ["WH-1000XM5 помогают сосредоточиться на музыке и подкастах в дороге и рабочем пространстве.", "WH-1000XM5 жолда және жұмыс орнында музыка мен подкастқа көңіл бөлуге көмектеседі.", "WH-1000XM5 help you focus on music and podcasts while commuting or working."],
+        ["AirPods Pro 2 удобно дополняют устройства Apple для звонков, музыки и повседневных поездок.", "AirPods Pro 2 қоңырау, музыка және күнделікті сапарларда Apple құрылғыларын ыңғайлы толықтырады.", "AirPods Pro 2 complement Apple devices for calls, music, and everyday travel."],
+        ["QuietComfort Ultra подойдут для длительного прослушивания и спокойного отдыха с любимым звуком.", "QuietComfort Ultra ұзақ тыңдауға және сүйікті әуенмен тынығуға лайық.", "QuietComfort Ultra suit long listening sessions and relaxed time with your favorite sound."],
+        ["Galaxy Buds2 Pro — компактный вариант для музыки, коротких звонков и активного дня.", "Galaxy Buds2 Pro музыкаға, қысқа қоңырауларға және белсенді күнге арналған ықшам нұсқа.", "Galaxy Buds2 Pro are a compact choice for music, quick calls, and active days."],
+        ["JBL Tune 770NC добавят любимые плейлисты в поездки, занятия и перерывы между делами.", "JBL Tune 770NC сапарға, сабаққа және жұмыс арасындағы үзіліске сүйікті әуенді қосады.", "JBL Tune 770NC bring your playlists along for commutes, study, and breaks."],
+        ["Momentum 4 подойдут ценителям насыщенного звучания для дома, офиса и путешествий.", "Momentum 4 үйде, кеңседе және сапарда қанық дыбысты бағалайтындарға арналған.", "Momentum 4 suit listeners who enjoy rich sound at home, work, and while traveling."],
+        ["AirPods 3 — простой способ слушать аудио и принимать звонки в экосистеме Apple.", "AirPods 3 — Apple экожүйесінде аудио тыңдап, қоңырау қабылдаудың оңай жолы.", "AirPods 3 offer a simple way to enjoy audio and take calls in Apple's ecosystem."],
+        ["Major IV привносят узнаваемый стиль Marshall в ежедневное прослушивание любимых альбомов.", "Major IV Marshall-дың танымал стилін күнделікті сүйікті альбомдарды тыңдауға әкеледі.", "Major IV bring Marshall's recognizable style to everyday album listening."],
+        ["Soundcore Q45 пригодятся для музыки и подкастов дома, в поездке или во время учёбы.", "Soundcore Q45 үйде, сапарда немесе сабақ кезінде музыка мен подкаст тыңдауға ыңғайлы.", "Soundcore Q45 are ready for music and podcasts at home, on trips, or during study."],
+        ["Nothing Ear (a) добавят лаконичный акцент к повседневному прослушиванию и звонкам.", "Nothing Ear (a) күнделікті музыка мен қоңырауға жинақы стиль қосады.", "Nothing Ear (a) add a clean design touch to everyday listening and calls."]
+      ],
+      accessories: [
+        ["Apple Watch Series 9 удобно дополняют iPhone уведомлениями, активностью и быстрыми действиями.", "Apple Watch Series 9 iPhone құрылғысын хабарландыру, белсенділік және жылдам әрекеттермен толықтырады.", "Apple Watch Series 9 complement an iPhone with notifications, activity, and quick actions."],
+        ["Galaxy Watch6 помогает держать под рукой уведомления и полезные функции в течение дня.", "Galaxy Watch6 күн бойы хабарландырулар мен пайдалы функцияларды қолжетімді етеді.", "Galaxy Watch6 keeps notifications and useful tools close throughout the day."],
+        ["PowerCore 20K пригодится в дороге, когда нужно подзарядить гаджеты вдали от розетки.", "PowerCore 20K розеткадан алыс сапарда құрылғыларды қуаттауға қажет болады.", "PowerCore 20K is useful on trips when your devices need power away from an outlet."],
+        ["MagSafe Charger помогает аккуратно организовать привычную зарядку совместимого устройства Apple.", "MagSafe Charger үйлесімді Apple құрылғысын күнделікті қуаттауды ыңғайлы ұйымдастырады.", "MagSafe Charger keeps charging a compatible Apple device simple and tidy."],
+        ["MX Master 3S создана для точной навигации по документам, таблицам и творческим проектам.", "MX Master 3S құжат, кесте және шығармашылық жобаларда дәл басқаруға арналған.", "MX Master 3S is designed for precise navigation through documents, spreadsheets, and creative work."],
+        ["Keychron K2 Pro поможет создать компактное рабочее место для набора текста и программирования.", "Keychron K2 Pro мәтін теру мен бағдарламалауға арналған ықшам жұмыс орнын құруға көмектеседі.", "Keychron K2 Pro helps build a compact desk setup for typing and coding."],
+        ["T7 Shield 1TB удобно взять с собой для хранения и переноса личных файлов.", "T7 Shield 1TB жеке файлдарды сақтап, тасымалдау үшін алып жүруге ыңғайлы.", "T7 Shield 1TB travels easily for keeping and moving personal files."],
+        ["USB-C Hub 8-in-1 расширяет привычное подключение ноутбука к периферии и рабочим устройствам.", "USB-C Hub 8-in-1 ноутбукты перифериялық және жұмыс құрылғыларына қосуды кеңейтеді.", "USB-C Hub 8-in-1 expands how your laptop connects to everyday peripherals and work gear."],
+        ["Apple Pencil USB-C подойдёт для рукописных заметок, пометок и набросков на совместимом iPad.", "Apple Pencil USB-C үйлесімді iPad-та қолжазба жазба, белгі және сызба жасауға жарайды.", "Apple Pencil USB-C suits handwritten notes, markups, and sketches on a compatible iPad."],
+        ["Зарядное устройство Baseus GaN 65W помогает сократить количество адаптеров в поездках и дома.", "Baseus GaN 65W үйде және сапарда адаптер санын азайтуға көмектеседі.", "The Baseus GaN 65W charger helps reduce the number of adapters at home and on trips."]
+      ]
+    };
+    const LANGUAGE_LOCALES = { ru: "ru-KZ", kk: "kk-KZ", en: "en-KZ" };
+    const UI_TEXT = {
+      "Бесплатная доставка от 50 000 ₸": { kk: "50 000 ₸ бастап тегін жеткізу", en: "Free delivery on orders over ₸50,000" },
+      "Поддержка каждый день с 9:00 до 21:00": { kk: "Қолдау күн сайын 9:00–21:00", en: "Support every day, 9:00 AM–9:00 PM" },
+      "Каталог": { kk: "Каталог", en: "Catalog" }, "О магазине": { kk: "Дүкен туралы", en: "About" },
+      "Поиск товаров": { kk: "Тауарларды іздеу", en: "Search products" }, "Поиск по каталогу…": { kk: "Каталогтан іздеу…", en: "Search the catalog…" },
+      "Войти": { kk: "Кіру", en: "Sign in" }, "Создать аккаунт": { kk: "Тіркелу", en: "Create account" },
+      "Админ": { kk: "Әкімші", en: "Admin" }, "Открыть корзину": { kk: "Себетті ашу", en: "Open cart" },
+      "РАДЫ ВИДЕТЬ": { kk: "ҚОШ КЕЛДІҢІЗ", en: "WELCOME BACK" },
+      "Войти в аккаунт": { kk: "Аккаунтқа кіру", en: "Sign in to your account" },
+      "Ваше имя": { kk: "Атыңыз", en: "Your name" }, "Имя": { kk: "Аты", en: "First name" },
+      "Фамилия": { kk: "Тегі", en: "Last name" }, "Например, Айдана": { kk: "Мысалы, Айдана", en: "e.g. Aidana" },
+      "Например, Садыкова": { kk: "Мысалы, Садыкова", en: "e.g. Sadykova" },
+      "Электронная почта": { kk: "Электрондық пошта", en: "Email address" },
+      "Пароль": { kk: "Құпиясөз", en: "Password" }, "Подтвердите пароль": { kk: "Құпиясөзді растаңыз", en: "Confirm password" },
+      "Не менее 8 символов": { kk: "Кемінде 8 таңба", en: "At least 8 characters" },
+      "Повторите пароль": { kk: "Құпиясөзді қайталаңыз", en: "Repeat password" },
+      "Показать": { kk: "Көрсету", en: "Show" }, "Скрыть": { kk: "Жасыру", en: "Hide" },
+      "Зарегистрироваться": { kk: "Тіркелу", en: "Register" },
+      "Демонстрация: учётные записи, роли и заказы находятся в LocalStorage и доступны для изменения через DevTools. Это не обеспечивает реальную безопасность. Не используйте реальные пароли.": {
+        kk: "Демо: тіркелгілер, рөлдер мен тапсырыстар LocalStorage-та сақталады және DevTools арқылы өзгертілуі мүмкін. Бұл нақты қауіпсіздікті қамтамасыз етпейді. Нақты құпиясөздерді қолданбаңыз.",
+        en: "Demo only: accounts, roles, and orders are stored in LocalStorage and can be changed in DevTools. This is not real security. Do not use real passwords."
+      },
+      "ВАШ ВЫБОР": { kk: "СІЗДІҢ ТАҢДАУЫҢЫЗ", en: "YOUR SELECTION" }, "Корзина": { kk: "Себет", en: "Cart" },
+      "Закрыть": { kk: "Жабу", en: "Close" }, "Закрыть корзину": { kk: "Себетті жабу", en: "Close cart" },
+      "Корзина пока пуста": { kk: "Себет әзірге бос", en: "Your cart is empty" },
+      "Самое время найти что-нибудь особенное.": { kk: "Ерекше бір нәрсе табатын кез келді.", en: "It's a great time to find something special." },
+      "Перейти к покупкам": { kk: "Сатып алуға өту", en: "Continue shopping" },
+      "Уменьшить количество: {name}": { kk: "Санын азайту: {name}", en: "Decrease quantity: {name}" },
+      "Увеличить количество: {name}": { kk: "Санын көбейту: {name}", en: "Increase quantity: {name}" },
+      "Удалить": { kk: "Жою", en: "Remove" }, "Товары": { kk: "Тауарлар", en: "Products" },
+      "Доставка": { kk: "Жеткізу", en: "Delivery" }, "Бесплатно": { kk: "Тегін", en: "Free" },
+      "Убрать промокод": { kk: "Промокодты алып тастау", en: "Remove promo code" },
+      "Итого": { kk: "Барлығы", en: "Total" }, "Промокод": { kk: "Промокод", en: "Promo code" },
+      "Применить": { kk: "Қолдану", en: "Apply" }, "Оформить заказ": { kk: "Тапсырыс беру", en: "Place order" },
+      "ПОСЛЕДНИЙ ШАГ": { kk: "СОҢҒЫ ҚАДАМ", en: "FINAL STEP" }, "Оформление заказа": { kk: "Тапсырысты рәсімдеу", en: "Checkout" },
+      "Оплата наличными при получении": { kk: "Жеткізілген кезде қолма-қол төлеу", en: "Cash on delivery" },
+      "ФИО": { kk: "Аты-жөні", en: "Full name" }, "Телефон Казахстана": { kk: "Қазақстан телефоны", en: "Kazakhstan phone" },
+      "Электронная почта": { kk: "Электрондық пошта", en: "Email address" },
+      "Адрес доставки": { kk: "Жеткізу мекенжайы", en: "Delivery address" },
+      "Город, улица, дом, квартира": { kk: "Қала, көше, үй, пәтер", en: "City, street, building, apartment" },
+      "Комментарий": { kk: "Түсініктеме", en: "Comment" }, "необязательно": { kk: "міндетті емес", en: "optional" },
+      "Например, позвонить за час до доставки": { kk: "Мысалы, жеткізуге бір сағат қалғанда қоңырау шалу", en: "For example, call one hour before delivery" },
+      "Подтвердить заказ": { kk: "Тапсырысты растау", en: "Confirm order" },
+      "Нажимая кнопку, вы оформляете учебный заказ без реальной оплаты.": { kk: "Бұл батырманы басу арқылы нақты төлемсіз демо-тапсырыс бересіз.", en: "This creates a demo order with no real payment." },
+      "УПРАВЛЕНИЕ МАГАЗИНОМ": { kk: "ДҮКЕНДІ БАСҚАРУ", en: "STORE MANAGEMENT" },
+      "Панель администратора": { kk: "Әкімші панелі", en: "Admin panel" }, "Промокоды": { kk: "Промокодтар", en: "Promo codes" },
+      "Склад": { kk: "Қойма", en: "Stock" }, "Каталог {count}": { kk: "Каталог: {count}", en: "Catalog: {count}" },
+      "＋ Добавить товар": { kk: "＋ Тауар қосу", en: "＋ Add product" }, "＋ Добавить промокод": { kk: "＋ Промокод қосу", en: "＋ Add promo code" },
+      "Заказы": { kk: "Тапсырыстар", en: "Orders" }, "Экспорт CSV": { kk: "CSV экспорттау", en: "Export CSV" },
+      "Поиск по заказу, клиенту, телефону": { kk: "Тапсырыс, клиент немесе телефон бойынша іздеу", en: "Search order, customer, or phone" },
+      "Все статусы": { kk: "Барлық мәртебе", en: "All statuses" }, "Новый": { kk: "Жаңа", en: "New" },
+      "В обработке": { kk: "Өңделуде", en: "Processing" }, "Завершён": { kk: "Аяқталды", en: "Completed" },
+      "Отменён": { kk: "Болдырылмады", en: "Cancelled" }, "Изменить": { kk: "Өзгерту", en: "Edit" },
+      "Включить": { kk: "Қосу", en: "Enable" }, "Отключить": { kk: "Өшіру", en: "Disable" },
+      "История складских операций": { kk: "Қойма операцияларының тарихы", en: "Stock movement history" },
+      "Избранное и заказы": { kk: "Таңдаулылар мен тапсырыстар", en: "Favorites and orders" },
+      "ВАШ АККАУНТ": { kk: "СІЗДІҢ АККАУНТЫҢЫЗ", en: "YOUR ACCOUNT" },
+      "Избранное": { kk: "Таңдаулылар", en: "Favorites" }, "История заказов": { kk: "Тапсырыстар тарихы", en: "Order history" },
+      "Убрать": { kk: "Алып тастау", en: "Remove" },
+      "Статусы и история доступны только в этом браузере и могут быть изменены через DevTools. Заказы демонстрационные.": {
+        kk: "Мәртебелер мен тарих тек осы браузерде сақталады және DevTools арқылы өзгертілуі мүмкін. Тапсырыстар — демо.",
+        en: "Statuses and history are stored only in this browser and can be changed in DevTools. Orders are for demonstration only."
+      },
+      "КАТАЛОГ": { kk: "КАТАЛОГ", en: "CATALOG" }, "Новый товар": { kk: "Жаңа тауар", en: "New product" },
+      "Название": { kk: "Атауы", en: "Name" }, "Цвет / вариант": { kk: "Түсі / нұсқасы", en: "Color / variant" },
+      "Например, чёрный": { kk: "Мысалы, қара", en: "For example, black" }, "Описание": { kk: "Сипаттама", en: "Description" },
+      "Цена, ₸": { kk: "Бағасы, ₸", en: "Price, ₸" }, "Остаток, шт.": { kk: "Қалдық, дана", en: "Stock, units" },
+      "URL фото (проверенная модель/цвет)": { kk: "Фото URL (модель/түсі тексерілген)", en: "Photo URL (verified model/color)" },
+      "https://…": { kk: "https://…", en: "https://…" },
+      "При отсутствии сети или ошибке загрузки вместо фото отобразится название товара.": { kk: "Желі болмаса немесе сурет жүктелмесе, тауар атауы көрсетіледі.", en: "The product name appears if the image cannot load or the network is unavailable." },
+      "Сохранить товар": { kk: "Тауарды сақтау", en: "Save product" },
+      "Сохранить": { kk: "Сақтау", en: "Save" }, "Отмена": { kk: "Болдырмау", en: "Cancel" },
+      "Срок действия": { kk: "Жарамдылық мерзімі", en: "Validity period" }, "Активен": { kk: "Белсенді", en: "Active" },
+      "Код": { kk: "Код", en: "Code" }, "Тип скидки": { kk: "Жеңілдік түрі", en: "Discount type" },
+      "Процент": { kk: "Пайыз", en: "Percent" }, "Фиксированная сумма (₸)": { kk: "Тұрақты сома (₸)", en: "Fixed amount (₸)" },
+      "Размер скидки": { kk: "Жеңілдік мөлшері", en: "Discount amount" }, "Минимальная сумма заказа (₸)": { kk: "Тапсырыстың ең аз сомасы (₸)", en: "Minimum order amount (₸)" },
+      "Начало действия": { kk: "Басталу күні", en: "Starts at" }, "Окончание действия": { kk: "Аяқталу күні", en: "Ends at" },
+      "Лимит применений": { kk: "Қолдану шегі", en: "Usage limit" },
+      "ТЕХНОЛОГИИ НА КАЖДЫЙ ДЕНЬ": { kk: "КҮНДЕЛІКТІ ТЕХНОЛОГИЯЛАР", en: "TECH FOR EVERY DAY" },
+      "Твой мир.": { kk: "Сенің әлемің.", en: "Your world." }, "Твои правила.": { kk: "Сенің ережелерің.", en: "Your rules." },
+      "Выбирай технику, которая помогает быть собой. Только проверенные бренды, честные цены и забота о каждой детали.": {
+        kk: "Өзің болуға көмектесетін техниканы таңда. Тексерілген брендтер, әділ бағалар және әр бөлшекке мұқият көңіл.",
+        en: "Choose tech that lets you be yourself. Trusted brands, fair prices, and care in every detail."
+      },
+      "Выбрать технику": { kk: "Техниканы таңдау", en: "Shop technology" }, "Выбор 2 000+ покупателей": { kk: "2 000+ сатып алушының таңдауы", en: "Chosen by 2,000+ customers" },
+      "Найди то, что вдохновляет": { kk: "Шабыт сыйлайтын нәрсені тап", en: "Find what inspires you" },
+      "Оригинальная техника": { kk: "Түпнұсқа техника", en: "Genuine technology" }, "Только проверенные товары": { kk: "Тек тексерілген тауарлар", en: "Carefully selected products" },
+      "Быстрая доставка": { kk: "Жылдам жеткізу", en: "Fast delivery" }, "По всему Казахстану": { kk: "Бүкіл Қазақстан бойынша", en: "Across Kazakhstan" },
+      "Гарантия качества": { kk: "Сапа кепілдігі", en: "Quality promise" }, "Помогаем после покупки": { kk: "Сатып алғаннан кейін де көмектесеміз", en: "Support after purchase" },
+      "Честные цены": { kk: "Әділ бағалар", en: "Fair prices" }, "Удобная оплата при получении": { kk: "Жеткізілгенде ыңғайлы төлем", en: "Convenient payment on delivery" },
+      "НАШ ВЫБОР": { kk: "БІЗДІҢ ТАҢДАУ", en: "OUR SELECTION" }, "Каталог техники": { kk: "Техника каталогы", en: "Technology catalog" },
+      "Всё нужное — в одном месте. Выбирай с удовольствием.": { kk: "Қажеттіңнің бәрі бір жерде. Таңдаудан ләззат ал.", en: "Everything you need in one place. Enjoy choosing." },
+      "Сортировка": { kk: "Сұрыптау", en: "Sort" }, "Сначала популярные": { kk: "Алдымен танымалдары", en: "Most popular" },
+      "Сначала дешевле": { kk: "Алдымен арзандары", en: "Price: low to high" }, "Сначала дороже": { kk: "Алдымен қымбаттары", en: "Price: high to low" },
+      "По рейтингу": { kk: "Рейтинг бойынша", en: "By rating" }, "Сбросить фильтры": { kk: "Сүзгілерді тазарту", en: "Clear filters" },
+      "Техника для твоего ритма. Выбирай, вдохновляйся, создавай.": { kk: "Сенің ырғағыңа сай техника. Таңда, шабыттан, жаса.", en: "Tech for your rhythm. Choose, get inspired, create." },
+      "Учебный демонстрационный магазин": { kk: "Оқу мақсатындағы демо-дүкен", en: "Educational demo store" },
+      "Пн–Вс · 9:00–21:00": { kk: "Дс–Жс · 9:00–21:00", en: "Mon–Sun · 9:00 AM–9:00 PM" },
+      "Учётные записи, роли, остатки и заказы демонстрационные: данные LocalStorage можно подменить, реальной авторизации и складской гарантии нет.": {
+        kk: "Тіркелгілер, рөлдер, қалдықтар мен тапсырыстар — демо: LocalStorage деректерін өзгертуге болады, нақты авторизация не қойма кепілдігі жоқ.",
+        en: "Accounts, roles, stock, and orders are demos: LocalStorage can be altered; there is no real authentication or inventory guarantee."
+      },
+      "Учебный заказ без реальной оплаты": { kk: "Нақты төлемсіз демо-тапсырыс", en: "Demo order with no real payment" },
+      "Найдено товаров: {count}": { kk: "Табылған тауар: {count}", en: "Products found: {count}" },
+      "В наличии: {count}": { kk: "Қоймада: {count}", en: "In stock: {count}" },
+      "Добавить в корзину: {name}": { kk: "Себетке қосу: {name}", en: "Add to cart: {name}" },
+      "Добавить в избранное: {name}": { kk: "Таңдаулыларға қосу: {name}", en: "Add to favorites: {name}" },
+      "Убрать из избранного: {name}": { kk: "Таңдаулылардан алып тастау: {name}", en: "Remove from favorites: {name}" },
+      "Мало осталось": { kk: "Аз қалды", en: "Low stock" }, "Нет в наличии": { kk: "Қоймада жоқ", en: "Out of stock" },
+      "Ничего не нашлось": { kk: "Ештеңе табылмады", en: "No results found" },
+      "Попробуйте изменить запрос или выбрать другую категорию.": { kk: "Іздеу сұрауын өзгертіңіз немесе басқа санатты таңдаңыз.", en: "Try another search or choose a different category." },
+      "Новый товар": { kk: "Жаңа тауар", en: "New product" }, "Изменить товар": { kk: "Тауарды өзгерту", en: "Edit product" },
+      "Товаров в каталоге": { kk: "Каталогтағы тауарлар", en: "Products in catalog" }, "Всего заказов": { kk: "Барлық тапсырыс", en: "Total orders" },
+      "Выручка": { kk: "Түсім", en: "Revenue" }, "Средний чек": { kk: "Орташа чек", en: "Average order" },
+      "только завершённые заказы": { kk: "тек аяқталған тапсырыстар", en: "completed orders only" },
+      "без заказов": { kk: "тапсырыс жоқ", en: "no orders" }, "{count} новых": { kk: "{count} жаңа", en: "{count} new" },
+      "Товаров пока нет.": { kk: "Әзірге тауар жоқ.", en: "No products yet." }, "Заказов пока нет.": { kk: "Әзірге тапсырыс жоқ.", en: "No orders yet." },
+      "По выбранным условиям заказов нет.": { kk: "Таңдалған шарттарға сай тапсырыс жоқ.", en: "No orders match these filters." },
+      "Промокодов пока нет.": { kk: "Әзірге промокод жоқ.", en: "No promo codes yet." },
+      "Изменений остатков пока нет.": { kk: "Қалдық өзгерістері әзірге жоқ.", en: "No stock movements yet." },
+      "Пока нет избранных товаров.": { kk: "Таңдаулылар тізімі әзірге бос.", en: "No favorite products yet." },
+      "Заказов пока нет.": { kk: "Әзірге тапсырыс жоқ.", en: "No orders yet." },
+      "Активен": { kk: "Белсенді", en: "Active" }, "Отключён": { kk: "Өшірулі", en: "Inactive" },
+      "Фото недоступно": { kk: "Фото қолжетімсіз", en: "Photo unavailable" },
+      "Мои покупки": { kk: "Сатып алуларым", en: "My purchases" },
+      "Весь каталог": { kk: "Барлық тауар", en: "All products" },
+      "Смартфоны": { kk: "Смартфондар", en: "Smartphones" },
+      "Ноутбуки": { kk: "Ноутбуктер", en: "Laptops" },
+      "Планшеты": { kk: "Планшеттер", en: "Tablets" },
+      "Наушники": { kk: "Құлаққаптар", en: "Headphones" },
+      "Аксессуары": { kk: "Аксессуарлар", en: "Accessories" },
+      "Описание на русском": { kk: "Орыс тіліндегі сипаттама", en: "Description in Russian" },
+      "Қазақша сипаттама": { kk: "Қазақша сипаттама", en: "Description in Kazakh" },
+      "Description in English": { kk: "Ағылшын тіліндегі сипаттама", en: "Description in English" },
+      "Сохранить остаток": { kk: "Қалдықты сақтау", en: "Save stock" },
+      "Добавить в корзину: {name}": { kk: "Себетке қосу: {name}", en: "Add to cart: {name}" },
+      "Нет в наличии: {name}": { kk: "Қоймада жоқ: {name}", en: "Out of stock: {name}" },
+      "Товар добавлен в корзину: {name}": { kk: "Тауар себетке қосылды: {name}", en: "Added to cart: {name}" },
+      "Недостаточно товара «{name}». Обновите количество.": { kk: "«{name}» тауары жеткіліксіз. Санын жаңартыңыз.", en: "Not enough “{name}” in stock. Update the quantity." },
+      "В наличии только {count} шт.": { kk: "Қоймада тек {count} дана бар.", en: "Only {count} left in stock." },
+      "Доступно только {count} шт.": { kk: "Тек {count} дана қолжетімді.", en: "Only {count} available." },
+      "К оплате при получении: {amount}": { kk: "Жеткізілгенде төленеді: {amount}", en: "Due on delivery: {amount}" },
+      "Заказ {id} оформлен! Оплата при получении.": { kk: "{id} тапсырысы рәсімделді! Жеткізгенде төлеңіз.", en: "Order {id} placed! Pay on delivery." },
+      "Добро пожаловать, {name}!": { kk: "Қош келдіңіз, {name}!", en: "Welcome, {name}!" },
+      "Найдено товаров: {count}": { kk: "Табылған тауар: {count}", en: "Products found: {count}" },
+      "В наличии: {count}": { kk: "Қоймада: {count}", en: "In stock: {count}" },
+      "Поиск заказов": { kk: "Тапсырыстарды іздеу", en: "Search orders" },
+      "Фильтр по статусу": { kk: "Мәртебе бойынша сүзгі", en: "Filter by status" },
+      "Проверьте название, категорию и все три описания товара.": { kk: "Тауар атауын, санатын және үш тілдегі сипаттамасын тексеріңіз.", en: "Check the product name, category, and all three descriptions." },
+      "Проверьте цену и количество товара.": { kk: "Тауар бағасы мен санын тексеріңіз.", en: "Check the product price and quantity." },
+      "Введите корректный адрес электронной почты.": { kk: "Электрондық пошта мекенжайын дұрыс енгізіңіз.", en: "Enter a valid email address." },
+      "Аккаунт с такой почтой уже существует.": { kk: "Бұл пошта мекенжайы тіркелген.", en: "An account with this email already exists." },
+      "Пароль должен содержать не менее 8 символов.": { kk: "Құпиясөз кемінде 8 таңбадан тұруы керек.", en: "Password must contain at least 8 characters." },
+      "Пароль не должен быть длиннее 128 символов.": { kk: "Құпиясөз 128 таңбадан аспауы керек.", en: "Password must be no longer than 128 characters." },
+      "Добавьте хотя бы одну заглавную букву.": { kk: "Кемінде бір бас әріп қосыңыз.", en: "Add at least one uppercase letter." },
+      "Добавьте хотя бы одну строчную букву.": { kk: "Кемінде бір кіші әріп қосыңыз.", en: "Add at least one lowercase letter." },
+      "Добавьте хотя бы одну цифру.": { kk: "Кемінде бір сан қосыңыз.", en: "Add at least one digit." },
+      "Пароли не совпадают.": { kk: "Құпиясөздер сәйкес келмейді.", en: "Passwords do not match." },
+      "Неверная почта или пароль.": { kk: "Пошта немесе құпиясөз қате.", en: "Incorrect email or password." },
+      "Промокод не найден.": { kk: "Промокод табылмады.", en: "Promo code not found." },
+      "Промокод отключён.": { kk: "Промокод өшірілген.", en: "Promo code is disabled." },
+      "Срок действия промокода не наступил или истёк.": { kk: "Промокод мерзімі басталмаған немесе аяқталған.", en: "Promo code is not yet valid or has expired." },
+      "Лимит применений промокода исчерпан.": { kk: "Промокодты қолдану шегі аяқталды.", en: "Promo code usage limit has been reached." },
+      "Минимальная сумма заказа для промокода — {amount}.": { kk: "Промокод үшін тапсырыстың ең аз сомасы — {amount}.", en: "Minimum order for this promo code is {amount}." },
+      "Скидки не суммируются. Сначала уберите текущий промокод.": { kk: "Жеңілдіктер қосылмайды. Алдымен қолданылған промокодты алып тастаңыз.", en: "Discounts cannot be combined. Remove the current promo code first." },
+      "Войдите в аккаунт, чтобы сохранять избранное.": { kk: "Таңдаулыларды сақтау үшін аккаунтқа кіріңіз.", en: "Sign in to save favorites." },
+      "Товар добавлен в избранное": { kk: "Тауар таңдаулыларға қосылды", en: "Added to favorites" },
+      "Товар удалён из избранного": { kk: "Тауар таңдаулылардан алынды", en: "Removed from favorites" },
+      "Добавьте товары в корзину.": { kk: "Себетке тауар қосыңыз.", en: "Add products to your cart." },
+      "Войдите или создайте аккаунт, чтобы оформить заказ.": { kk: "Тапсырыс беру үшін кіріңіз немесе аккаунт жасаңыз.", en: "Sign in or create an account to place an order." },
+      "Укажите имя и фамилию полностью.": { kk: "Аты-жөніңізді толық көрсетіңіз.", en: "Enter your full first and last name." },
+      "Введите корректный номер Казахстана: +7 и 10 цифр, код начинается с 6 или 7.": { kk: "Қазақстанның дұрыс нөмірін енгізіңіз: +7 және 10 сан, код 6 не 7-ден басталады.", en: "Enter a valid Kazakhstan number: +7 followed by 10 digits, with a 6 or 7 area prefix." },
+      "Введите корректный адрес электронной почты.": { kk: "Дұрыс электрондық пошта мекенжайын енгізіңіз.", en: "Enter a valid email address." },
+      "Укажите электронную почту.": { kk: "Электрондық пошта мекенжайын көрсетіңіз.", en: "Enter an email address." },
+      "Укажите номер телефона.": { kk: "Телефон нөмірін көрсетіңіз.", en: "Enter a phone number." },
+      "Укажите полный адрес доставки.": { kk: "Жеткізу мекенжайын толық көрсетіңіз.", en: "Enter the full delivery address." },
+      "Корзина пуста.": { kk: "Себет бос.", en: "Your cart is empty." },
+      "В корзине есть некорректное количество товара.": { kk: "Себеттегі тауар саны қате.", en: "The cart contains an invalid quantity." },
+      "Не удалось проверить сумму заказа. Проверьте корзину.": { kk: "Тапсырыс сомасын тексеру мүмкін болмады. Себетті тексеріңіз.", en: "Could not validate the order total. Check your cart." },
+      "Требуется вход администратора.": { kk: "Әкімші ретінде кіру қажет.", en: "Administrator sign-in is required." },
+      "Доступ только для администратора.": { kk: "Тек әкімшіге қолжетімді.", en: "Administrator access only." },
+      "Товар закончился.": { kk: "Тауар таусылды.", en: "This product is out of stock." },
+      "Остаток должен быть целым числом от 0 до 100 000.": { kk: "Қалдық 0 мен 100 000 арасындағы бүтін сан болуы керек.", en: "Stock must be a whole number from 0 to 100,000." },
+      "Остаток обновлён": { kk: "Қалдық жаңартылды", en: "Stock updated" },
+      "Заказов пока нет.": { kk: "Әзірге тапсырыс жоқ.", en: "No orders yet." },
+      "Изменения остатков пока нет.": { kk: "Қалдық өзгерістері әзірге жоқ.", en: "No stock movements yet." },
+      "Выручка заказов": { kk: "Тапсырыстар түсімі", en: "Order revenue" },
+      "включая товары без остатка": { kk: "қалдығы жоқ тауарларды қоса", en: "including out-of-stock products" },
+      "по {count} завершённым заказам": { kk: "{count} аяқталған тапсырыс бойынша", en: "across {count} completed orders" },
+      "Срок начала должен быть раньше даты окончания.": { kk: "Басталу күні аяқталу күнінен бұрын болуы керек.", en: "Start date must be before the end date." },
+      "Минимальная сумма заказа (₸)": { kk: "Тапсырыстың ең аз сомасы (₸)", en: "Minimum order amount (₸)" },
+      "Демонстрация: авторизация, роли, остатки и заказы хранятся только в этом браузере и не защищены от изменения через DevTools.": { kk: "Демо: авторизация, рөлдер, қалдықтар мен тапсырыстар осы браузерде сақталады және DevTools арқылы өзгертілуі мүмкін.", en: "Demo only: authentication, roles, stock, and orders are stored in this browser and can be changed through DevTools." },
+      "Минимальная сумма заказа для промокода — {amount}.": { kk: "Промокод үшін тапсырыстың ең аз сомасы — {amount}.", en: "Minimum order amount for this promo code: {amount}." },
+      "Статус: {status}": { kk: "Мәртебе: {status}", en: "Status: {status}" },
+      "Товар добавлен в корзину: {name}": { kk: "Тауар себетке қосылды: {name}", en: "Added to cart: {name}" },
+      "Товар удалён из корзины": { kk: "Тауар себеттен алынды", en: "Product removed from cart" },
+      "Промокод {code} применён": { kk: "{code} промокоды қолданылды", en: "Promo code {code} applied" },
+      "Заказ {id} оформлен! Оплата при получении.": { kk: "{id} тапсырысы рәсімделді! Жеткізгенде төлеңіз.", en: "Order {id} placed! Pay on delivery." },
+      "Добро пожаловать, {name}!": { kk: "Қош келдіңіз, {name}!", en: "Welcome, {name}!" },
+      "По {count} завершённым заказам": { kk: "{count} аяқталған тапсырыс бойынша", en: "Across {count} completed orders" },
+      "Включая товары без остатка": { kk: "Қалдығы жоқ тауарларды қоса", en: "Including out-of-stock products" },
+      "В заказах отменённые не учитываются": { kk: "Болдырылмаған тапсырыстар есептелмейді", en: "Cancelled orders are excluded" },
+      "Укажите имя из 2–40 букв; допустимы пробел, дефис и апостроф.": { kk: "2–40 әріптен тұратын атты енгізіңіз; бос орын, дефис және апостроф рұқсат.", en: "Enter a 2–40 letter first name; spaces, hyphens, and apostrophes are allowed." },
+      "Укажите фамилию из 2–40 букв; допустимы пробел, дефис и апостроф.": { kk: "2–40 әріптен тұратын тегіңізді енгізіңіз; бос орын, дефис және апостроф рұқсат.", en: "Enter a 2–40 letter last name; spaces, hyphens, and apostrophes are allowed." },
+      "Промокод не найден. Проверьте написание.": { kk: "Промокод табылмады. Жазылуын тексеріңіз.", en: "Promo code not found. Check the spelling." },
+      "Нельзя удалить товар из активного заказа. Сначала отмените заказ.": { kk: "Белсенді тапсырыстағы тауарды жоюға болмайды. Алдымен тапсырысты болдырмаңыз.", en: "A product in an active order cannot be deleted. Cancel the order first." },
+      "Нельзя отменить заказ: проверьте наличие товара и предел остатка.": { kk: "Тапсырысты болдырмау мүмкін емес: тауарды және қалдық шегін тексеріңіз.", en: "Cannot cancel order: verify the products and stock limits." },
+      "Завершённый или отменённый заказ изменить нельзя.": { kk: "Аяқталған немесе болдырылмаған тапсырысты өзгертуге болмайды.", en: "Completed or cancelled orders cannot be changed." },
+      "Нет заказов для экспорта.": { kk: "Экспорттауға тапсырыс жоқ.", en: "There are no orders to export." },
+      "Экспорт заказов подготовлен": { kk: "Тапсырыстар экспорты дайын", en: "Orders export is ready" },
+      "Промокод создан": { kk: "Промокод жасалды", en: "Promo code created" },
+      "Промокод обновлён": { kk: "Промокод жаңартылды", en: "Promo code updated" },
+      "Промокод удалён": { kk: "Промокод жойылды", en: "Promo code deleted" },
+      "Промокод включён": { kk: "Промокод қосылды", en: "Promo code enabled" },
+      "Промокод отключён": { kk: "Промокод өшірілді", en: "Promo code disabled" },
+      "Статус заказа обновлён": { kk: "Тапсырыс мәртебесі жаңартылды", en: "Order status updated" },
+      "Товар обновлён": { kk: "Тауар жаңартылды", en: "Product updated" },
+      "Товар добавлен": { kk: "Тауар қосылды", en: "Product added" },
+      "Товар удалён": { kk: "Тауар жойылды", en: "Product deleted" },
+      "Заказ": { kk: "Тапсырыс", en: "Order" },
+      "Возврат заказа": { kk: "Тапсырысты қайтару", en: "Order restock" },
+      "Ручная корректировка": { kk: "Қолмен түзету", en: "Manual adjustment" },
+      "Изменение карточки товара": { kk: "Тауар карточкасын өзгерту", en: "Product edit" },
+      "Начальный остаток товара": { kk: "Тауардың бастапқы қалдығы", en: "Initial product stock" },
+      "Удаление товара из каталога": { kk: "Тауарды каталогтан жою", en: "Product removed from catalog" },
+      "Промокод должен содержать уникальный код из 3–20 букв, цифр, дефиса или подчёркивания.": { kk: "Промокод 3–20 әріптен, саннан, дефис не төменгі сызықтан тұруы және бірегей болуы керек.", en: "Promo code must be unique and contain 3–20 letters, digits, hyphens, or underscores." },
+      "Ramz Store — техника для вашего ритма": { kk: "Ramz Store — сіздің ырғағыңызға сай техника", en: "Ramz Store — technology for your rhythm" },
+      "Демонстрационная панель: проверка роли выполняется только в браузере. LocalStorage можно изменить через DevTools; это не является защитой от подмены данных.": { kk: "Демо панель: рөл тек браузерде тексеріледі. LocalStorage деректерін DevTools арқылы өзгертуге болады; бұл деректерді қолдан жасаудан қорғамайды.", en: "Demo panel: role checks run only in the browser. LocalStorage can be edited through DevTools and does not protect against data tampering." },
+      "＋ В корзину": { kk: "＋ Себетке", en: "＋ Add to cart" },
+      "Новый остаток: {name}": { kk: "Жаңа қалдық: {name}", en: "New stock level: {name}" },
+      "{category}{color} · {price} · Остаток: {stock}": { kk: "{category}{color} · {price} · Қалдық: {stock}", en: "{category}{color} · {price} · Stock: {stock}" },
+      "Статус заказа {id}": { kk: "{id} тапсырысының мәртебесі", en: "Status for order {id}" },
+      "Использовано {uses} из {limit} · {status}": { kk: "{limit} ішінен {uses} қолданылды · {status}", en: "{uses} of {limit} used · {status}" },
+      "От {amount} · {starts} — {ends}": { kk: "{amount} бастап · {starts} — {ends}", en: "From {amount} · {starts} — {ends}" },
+      "Отменить заказ {id} и вернуть товары на склад?": { kk: "{id} тапсырысын болдырмай, тауарларды қоймаға қайтару керек пе?", en: "Cancel order {id} and return items to stock?" },
+      "Удалить промокод {code}?": { kk: "{code} промокодын жою керек пе?", en: "Delete promo code {code}?" },
+      "Уменьшить остаток «{name}» на {count} шт.?": { kk: "«{name}» қалдығын {count} данаға азайту керек пе?", en: "Reduce “{name}” stock by {count} units?" },
+      "Email не сохранён": { kk: "Email сақталмаған", en: "Email not saved" },
+      "Укажите корректную ссылку изображения с HTTPS.": { kk: "HTTPS арқылы дұрыс сурет сілтемесін енгізіңіз.", en: "Enter a valid HTTPS image URL." },
+      "Цена и остаток должны быть конечными целыми числами в допустимом диапазоне.": { kk: "Баға мен қалдық рұқсат етілген аралықтағы бүтін сандар болуы керек.", en: "Price and stock must be finite whole numbers in the allowed range." },
+      "Введите уникальный код из 3–20 букв, цифр, дефиса или подчёркивания.": { kk: "3–20 таңбалы бірегей код енгізіңіз (әріп, сан, дефис не төменгі сызық).", en: "Enter a unique 3–20 character code using letters, digits, hyphens, or underscores." },
+      "Процент должен быть от 1 до 100, фиксированная скидка — целым положительным числом.": { kk: "Пайыз 1–100 аралығында, тұрақты жеңілдік оң бүтін сан болуы керек.", en: "Percent must be 1–100; fixed discounts must be positive whole numbers." },
+      "Проверьте минимальную сумму и лимит применений (он не может быть меньше использований).": { kk: "Ең аз соманы және қолдану шегін тексеріңіз (шек қолданылған саннан аз болмауы керек).", en: "Check the minimum order and usage limit (it cannot be below the number already used)." },
+      "Не удалось сохранить данные. Проверьте свободное место и настройки браузера.": { kk: "Деректер сақталмады. Браузер жадын және баптауларын тексеріңіз.", en: "Could not save data. Check browser storage and settings." },
+      "Вы вышли из аккаунта.": { kk: "Аккаунттан шықтыңыз.", en: "You have signed out." },
+      "Войдите в аккаунт, чтобы открыть покупки.": { kk: "Сатып алуларды көру үшін аккаунтқа кіріңіз.", en: "Sign in to view your purchases." },
+      "Сначала войдите": { kk: "Алдымен кіріңіз", en: "Sign in first" },
+      "Нельзя отменить заказ: часть товаров удалена из каталога.": { kk: "Тапсырысты болдырмау мүмкін емес: кей тауарлар каталогтан жойылған.", en: "Cannot cancel order: some products have been removed from the catalog." },
+      "Язык сайта": { kk: "Сайт тілі", en: "Site language" },
+      "Показать пароль": { kk: "Құпиясөзді көрсету", en: "Show password" },
+      "Показать подтверждение пароля": { kk: "Құпиясөз растауын көрсету", en: "Show password confirmation" },
+      "Войти или выйти из аккаунта": { kk: "Аккаунтқа кіру немесе шығу", en: "Sign in or sign out" },
+      "Фамилия Имя Отчество": { kk: "Тегі Аты Әкесінің аты", en: "Last name First name Middle name" },
+      "пароль": { kk: "құпиясөз", en: "password" },
+      "подтверждение пароля": { kk: "құпиясөзді растау", en: "password confirmation" },
+      "Показать {field}": { kk: "{field} көрсету", en: "Show {field}" },
+      "Скрыть {field}": { kk: "{field} жасыру", en: "Hide {field}" },
+      "Повторите пароль.": { kk: "Құпиясөзді қайталаңыз.", en: "Repeat the password." }
+    };
+    let currentLanguage = "ru";
+    let money = new Intl.NumberFormat(LANGUAGE_LOCALES[currentLanguage], { maximumFractionDigits: 0 });
+    const tr = (text, values = {}) => {
+      const translated = UI_TEXT[text]?.[currentLanguage] || text;
+      return translated.replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? `{${key}}`));
+    };
+    const uid = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+    const byId = id => document.getElementById(id);
+    const originalAttributes = new WeakMap();
+    const el = (tag, className = "", text = "") => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== "") {
+        node.textContent = String(text);
+        node.firstChild.__ramzOriginalText = String(text);
+        node.firstChild.nodeValue = tr(String(text));
+      }
+      return node;
+    };
+    function translateStaticContent() {
+      document.documentElement.lang = currentLanguage === "kk" ? "kk" : currentLanguage;
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const original = node.__ramzOriginalText ?? node.nodeValue;
+        node.__ramzOriginalText = original;
+        const trimmed = original.trim();
+        if (!trimmed) continue;
+        const translated = trimmed.startsWith("Фото недоступно\n")
+          ? `${tr("Фото недоступно")}\n${trimmed.slice("Фото недоступно\n".length)}`
+          : tr(trimmed);
+        node.nodeValue = original.replace(trimmed, translated);
+      }
+      document.querySelectorAll("*").forEach(element => {
+        let originals = originalAttributes.get(element);
+        if (!originals) { originals = {}; originalAttributes.set(element, originals); }
+        for (const attribute of ["placeholder", "aria-label", "title"]) {
+          if (element.hasAttribute(attribute)) {
+            if (!(attribute in originals)) originals[attribute] = element.getAttribute(attribute);
+            element.setAttribute(attribute, tr(originals[attribute]));
+          }
+        }
+      });
+      byId("languageSelect").value = currentLanguage;
+    }
+    function updateLanguage(language) {
+      if (!["ru", "kk", "en"].includes(language)) return;
+      currentLanguage = language;
+      state.language = language;
+      money = new Intl.NumberFormat(LANGUAGE_LOCALES[language], { maximumFractionDigits: 0 });
+      document.title = tr("Ramz Store — техника для вашего ритма");
+      translateStaticContent();
+      if (byId("authDialog").open) setAuthMode(authMode);
+      renderCategories(); renderProducts(); updateHeader();
+      if (byId("cartDialog").open) renderCart();
+      if (byId("accountDialog").open) renderAccount();
+      if (byId("adminDialog").open) renderAdmin();
+      if (byId("productDialog").open) updateProductPreview();
+      persist();
+    }
+    const safeText = (value, max = 500) => typeof value === "string" ? value.trim().slice(0, max) : "";
+    const validImage = value => {
+      if (typeof value !== "string" || value.length > 500) return "";
+      try { const url = new URL(value); return url.protocol === "https:" ? url.href : ""; } catch { return ""; }
+    };
+    const seededProducts = () => SEED.flatMap(([category, items]) => items.map(([name, price], index) => {
+      const descriptions = PRODUCT_DESCRIPTIONS[category][index];
+      return {
+        id: `${category}-${index + 1}`, name, price, category, stock: 3 + ((index * 7 + category.length) % 24),
+        rating: Number((4.45 + ((index * 3) % 6) / 10).toFixed(1)),
+        description: descriptions[0], descriptions: { ru: descriptions[0], kk: descriptions[1], en: descriptions[2] },
+        color: "", image: ""
+      };
+    }));
+    const isValidProduct = product => product && typeof product === "object" &&
+      typeof product.id === "string" && product.id.length > 0 && product.id.length < 100 &&
+      typeof product.name === "string" && product.name.trim().length > 0 && product.name.length <= 100 &&
+      CATEGORIES.some(category => category.id !== "all" && category.id === product.category) &&
+      Number.isSafeInteger(product.price) && product.price > 0 && product.price <= 100000000 &&
+      Number.isSafeInteger(product.stock) && product.stock >= 0 && product.stock <= 100000 &&
+      Number.isFinite(product.rating) && product.rating >= 0 && product.rating <= 5 &&
+      typeof product.description === "string";
+    const cleanProduct = product => {
+      const seedMatch = /^(phones|laptops|tablets|headphones|accessories)-(\d+)$/.exec(product.id);
+      const seededCopy = seedMatch && PRODUCT_DESCRIPTIONS[seedMatch[1]][Number(seedMatch[2]) - 1];
+      const existing = product.descriptions && typeof product.descriptions === "object" ? product.descriptions : null;
+      const descriptions = {
+        ru: safeText(existing?.ru || (seededCopy ? seededCopy[0] : product.description), 240),
+        kk: safeText(existing?.kk || (seededCopy ? seededCopy[1] : product.description), 240),
+        en: safeText(existing?.en || (seededCopy ? seededCopy[2] : product.description), 240)
+      };
+      return {
+        id: product.id, name: safeText(product.name, 100), price: product.price, category: product.category,
+        stock: product.stock, rating: Math.round(product.rating * 10) / 10,
+        description: descriptions.ru, descriptions, color: safeText(product.color, 60),
+        image: /^(phones|laptops|tablets|headphones|accessories)-\d+$/.test(product.id) && product.image?.startsWith("https://images.unsplash.com/")
+          ? "" : validImage(product.image)
+      };
+    };
+    const productDescription = product => product.descriptions?.[currentLanguage] || product.description;
+    const makeDefaultPromos = () => [
+      { id: "promo-discount10", code: "DISCOUNT10", type: "percent", value: 10, minimum: 0, startsAt: "2020-01-01T00:00:00.000Z", endsAt: "2099-12-31T23:59:59.000Z", limit: 1000, uses: 0, active: true },
+      { id: "promo-sale20", code: "SALE20", type: "percent", value: 20, minimum: 50000, startsAt: "2020-01-01T00:00:00.000Z", endsAt: "2099-12-31T23:59:59.000Z", limit: 1000, uses: 0, active: true }
+    ];
+    const defaults = () => ({
+      products: seededProducts(), language: "ru",
+      users: [{ id: "admin", name: "Администратор", firstName: "Администратор", lastName: "", email: "admin@shop.kz", password: "admin123", role: "admin" }],
+      cart: [], orders: [], currentUserId: null, promo: null, promos: makeDefaultPromos(), favorites: [], stockHistory: []
+    });
+    let storageWarning = "";
+    const loadState = () => {
+      const initial = defaults();
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw === null) return initial;
+        const saved = JSON.parse(raw);
+        if (!saved || typeof saved !== "object" || Array.isArray(saved)) throw new Error("Ожидался объект состояния");
+        if (!Array.isArray(saved.products) || !Array.isArray(saved.users) || !Array.isArray(saved.cart) || !Array.isArray(saved.orders)) throw new Error("Некорректная структура данных");
+        const protectedProductIds = new Set(saved.cart.filter(item => item && typeof item.productId === "string").map(item => item.productId));
+        for (const order of saved.orders) {
+          if (!order || !["new", "processing", "shipped"].includes(order.status) || !Array.isArray(order.items)) continue;
+          for (const item of order.items) if (item && typeof item.productId === "string") protectedProductIds.add(item.productId);
+        }
+        const products = saved.products.filter(isValidProduct).map(cleanProduct).filter(product => {
+          const seededId = /^(phones|laptops|tablets|headphones|accessories)-(\d+)$/.exec(product.id);
+          return !seededId || Number(seededId[2]) <= 2 || protectedProductIds.has(product.id);
+        });
+        const productIds = new Set(products.map(product => product.id));
+        if (productIds.size !== products.length) throw new Error("Повторяющиеся идентификаторы товаров");
+        const users = saved.users.filter(user => user && typeof user === "object" &&
+          typeof user.id === "string" && typeof user.name === "string" && typeof user.email === "string" &&
+          typeof user.password === "string" && ["admin", "customer"].includes(user.role))
+          .map(user => {
+            const names = safeText(user.name, 80).split(/\s+/);
+            return {
+              id: safeText(user.id, 100), name: safeText(user.name, 80),
+              firstName: safeText(user.firstName || names.shift() || "", 40),
+              lastName: safeText(user.lastName || names.join(" "), 40),
+              email: safeText(user.email, 254).toLowerCase(), password: user.password.slice(0, 128), role: user.role
+            };
+          });
+        if (!users.some(user => user.email === "admin@shop.kz")) users.unshift(initial.users[0]);
+        const userIds = new Set(users.map(user => user.id));
+        const orders = saved.orders.filter(order => order && typeof order === "object" && typeof order.id === "string" && typeof order.userId === "string" &&
+          typeof order.customerName === "string" && typeof order.phone === "string" && typeof order.address === "string" &&
+          Array.isArray(order.items) && Number.isSafeInteger(order.total) && order.total >= 0 &&
+          ["new", "processing", "shipped", "completed", "cancelled"].includes(order.status))
+          .map(order => ({
+            id: safeText(order.id, 100), userId: safeText(order.userId, 100), customerName: safeText(order.customerName, 120),
+            customerEmail: typeof order.customerEmail === "string" ? safeText(order.customerEmail, 254).toLowerCase() : "",
+            phone: safeText(order.phone, 24), address: safeText(order.address, 300), comment: safeText(order.comment, 500),
+            items: order.items.filter(item => item && typeof item.productId === "string" && Number.isSafeInteger(item.quantity) && item.quantity > 0 && Number.isSafeInteger(item.price) && item.price >= 0)
+              .map(item => ({ productId: item.productId, name: safeText(item.name, 100), quantity: item.quantity, price: item.price })),
+            subtotal: Number.isSafeInteger(order.subtotal) ? order.subtotal : order.total,
+            delivery: Number.isSafeInteger(order.delivery) ? order.delivery : 0,
+            discount: Number.isSafeInteger(order.discount) ? order.discount : 0,
+            total: order.total, promoCode: typeof order.promoCode === "string" ? safeText(order.promoCode, 20) : null,
+            status: order.status === "shipped" ? "processing" : order.status,
+            stockRestored: order.stockRestored === true || order.status === "cancelled",
+            createdAt: typeof order.createdAt === "string" ? order.createdAt : new Date().toISOString()
+          }));
+        const cart = saved.cart.filter(item => item && typeof item.productId === "string" && Number.isSafeInteger(item.quantity) && item.quantity > 0)
+          .filter(item => productIds.has(item.productId))
+          .map(item => ({ productId: item.productId, quantity: Math.min(item.quantity, products.find(product => product.id === item.productId).stock) }))
+          .filter(item => item.quantity > 0);
+        const promoSource = Array.isArray(saved.promos) ? saved.promos : initial.promos;
+        const promos = promoSource.filter(item => item && typeof item === "object" &&
+          typeof item.id === "string" && typeof item.code === "string" &&
+          ["percent", "fixed"].includes(item.type) && Number.isSafeInteger(item.value) &&
+          Number.isSafeInteger(item.minimum) && Number.isSafeInteger(item.limit) &&
+          Number.isSafeInteger(item.uses) && typeof item.active === "boolean" &&
+          typeof item.startsAt === "string" && Number.isFinite(Date.parse(item.startsAt)) &&
+          typeof item.endsAt === "string" && Number.isFinite(Date.parse(item.endsAt)))
+          .map(item => ({
+            id: safeText(item.id, 100), code: safeText(item.code, 20).toUpperCase(), type: item.type,
+            value: item.value, minimum: item.minimum, startsAt: item.startsAt, endsAt: item.endsAt,
+            limit: item.limit, uses: item.uses, active: item.active
+          }))
+          .filter(item => /^[A-Z0-9_-]{3,20}$/.test(item.code) && item.value > 0 &&
+            item.minimum >= 0 && item.limit > 0 && item.uses >= 0 &&
+            (item.type !== "percent" || item.value <= 100) && Date.parse(item.startsAt) < Date.parse(item.endsAt));
+        const favorites = Array.isArray(saved.favorites) ? saved.favorites
+          .filter(item => item && userIds.has(item.userId) && productIds.has(item.productId))
+          .map(item => ({ userId: item.userId, productId: item.productId })) : [];
+        const stockHistory = Array.isArray(saved.stockHistory) ? saved.stockHistory
+          .filter(item => item && typeof item.productId === "string" && typeof item.productName === "string" &&
+            Number.isSafeInteger(item.delta) && typeof item.reason === "string" && typeof item.createdAt === "string")
+          .map(item => ({ productId: safeText(item.productId, 100), productName: safeText(item.productName, 100), delta: item.delta, reason: safeText(item.reason, 100), createdAt: item.createdAt }))
+          .slice(0, 500) : [];
+        return {
+          products, users, cart, orders,
+          currentUserId: typeof saved.currentUserId === "string" && userIds.has(saved.currentUserId) ? saved.currentUserId : null,
+          language: ["ru", "kk", "en"].includes(saved.language) ? saved.language : "ru",
+          promo: typeof saved.promo === "string" && promos.some(item => item.code === saved.promo.toUpperCase()) ? saved.promo.toUpperCase() : null,
+          promos, favorites, stockHistory
+        };
+      } catch (error) {
+        console.error("Не удалось прочитать сохранённое состояние магазина:", error);
+        storageWarning = "Сохранённые данные повреждены. Магазин запущен с демонстрационными данными.";
+        try { localStorage.removeItem(STORAGE_KEY); } catch (removeError) { console.error("Не удалось удалить повреждённые данные:", removeError); }
+        return initial;
+      }
+    };
+    const state = loadState();
+    currentLanguage = state.language;
+    money = new Intl.NumberFormat(LANGUAGE_LOCALES[currentLanguage], { maximumFractionDigits: 0 });
+    let selectedCategory = "all";
+    let authMode = "login";
+    let pendingCheckout = false;
+    let storageFailureShown = false;
+    const persist = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        return true;
+      } catch (error) {
+        console.error("Не удалось сохранить данные магазина в LocalStorage:", error);
+        if (!storageFailureShown) { storageFailureShown = true; toast("Не удалось сохранить данные. Проверьте свободное место и настройки браузера.", "error"); }
+        return false;
+      }
+    };
+    const persistSnapshot = snapshot => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+        return true;
+      } catch (error) {
+        console.error("Не удалось сохранить данные магазина в LocalStorage:", error);
+        if (!storageFailureShown) { storageFailureShown = true; toast("Не удалось сохранить данные. Проверьте свободное место и настройки браузера.", "error"); }
+        return false;
+      }
+    };
+    const commitSnapshot = snapshot => {
+      if (!persistSnapshot(snapshot)) return false;
+      Object.assign(state, snapshot);
+      return true;
+    };
+    const currentUser = () => state.users.find(user => user.id === state.currentUserId) || null;
+    const isAdmin = () => currentUser()?.role === "admin";
+    const categoryName = id => tr(CATEGORIES.find(category => category.id === id)?.name || "Категория");
+    const formatMoney = value => `${money.format(value)} ₸`;
+    function toast(message, type = "success") {
+      const item = el("div", `toast pointer-events-auto rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg ${type === "error" ? "bg-red-600" : "bg-ink"}`, message);
+      item.setAttribute("role", type === "error" ? "alert" : "status");
+      byId("toastRegion").append(item);
+      window.setTimeout(() => item.remove(), 3800);
+    }
+    function dialogOpen(dialog) { if (!dialog.open) dialog.showModal(); }
+    function closeDialog(id) { const dialog = byId(id); if (dialog?.open) dialog.close(); }
+    function cartQuantity() { return state.cart.reduce((total, item) => total + item.quantity, 0); }
+    function cartSubtotal() { return state.cart.reduce((total, item) => {
+      const product = state.products.find(candidate => candidate.id === item.productId);
+      return total + (product ? product.price * item.quantity : 0);
+    }, 0); }
+    function cartDelivery(subtotal = cartSubtotal()) { return subtotal === 0 || subtotal >= 50000 ? 0 : 1500; }
+    function findPromo(code = state.promo) {
+      return code ? state.promos.find(item => item.code === code) || null : null;
+    }
+    function promoProblem(promo, subtotal) {
+      if (!promo) return tr("Промокод не найден.");
+      const now = Date.now();
+      if (!promo.active) return tr("Промокод отключён.");
+      if (now < Date.parse(promo.startsAt) || now > Date.parse(promo.endsAt)) return tr("Срок действия промокода не наступил или истёк.");
+      if (promo.uses >= promo.limit) return tr("Лимит применений промокода исчерпан.");
+      if (subtotal < promo.minimum) return tr("Минимальная сумма заказа для промокода — {amount}.", { amount: formatMoney(promo.minimum) });
+      return "";
+    }
+    function cartDiscount(subtotal = cartSubtotal()) {
+      const promo = findPromo();
+      if (!promo || promoProblem(promo, subtotal) || !subtotal) return 0;
+      return Math.min(subtotal, promo.type === "percent" ? Math.round(subtotal * promo.value / 100) : promo.value);
+    }
+    function cartTotal(subtotal = cartSubtotal()) { return Math.max(0, subtotal + cartDelivery(subtotal) - cartDiscount(subtotal)); }
+    function updateHeader() {
+      const user = currentUser();
+      byId("authButtonLabel").textContent = user ? user.name.split(/\s+/)[0] : tr("Войти");
+      byId("adminButton").classList.toggle("hidden", user?.role !== "admin");
+      byId("accountButton").classList.toggle("hidden", !user);
+      const count = cartQuantity();
+      byId("cartBadge").textContent = String(count);
+      byId("cartBadge").classList.toggle("hidden", count === 0);
+    }
+    function renderCategories() {
+      const list = byId("categoryList");
+      list.replaceChildren();
+      for (const category of CATEGORIES) {
+        const button = el("button", `category-chip shrink-0 rounded-full border px-4 py-2.5 text-sm font-semibold ${selectedCategory === category.id ? "border-ink bg-ink text-white" : "border-violet-100 bg-white text-slate-600 hover:border-violet-300 hover:text-violet-700"}`, category.name);
+        button.type = "button";
+        button.setAttribute("aria-pressed", String(selectedCategory === category.id));
+        button.addEventListener("click", () => { selectedCategory = category.id; renderCategories(); renderProducts(); });
+        list.append(button);
+      }
+    }
+    function isFavorite(productId) {
+      const user = currentUser();
+      return Boolean(user && state.favorites.some(item => item.userId === user.id && item.productId === productId));
+    }
+    function toggleFavorite(productId) {
+      if (!currentUser()) {
+        toast("Войдите в аккаунт, чтобы сохранять избранное.", "error");
+        setAuthMode("login"); dialogOpen(byId("authDialog"));
+        return;
+      }
+      if (!state.products.some(product => product.id === productId)) return;
+      const index = state.favorites.findIndex(item => item.userId === currentUser().id && item.productId === productId);
+      if (index < 0) state.favorites.push({ userId: currentUser().id, productId });
+      else state.favorites.splice(index, 1);
+      persist(); renderProducts();
+      if (byId("accountDialog").open) renderAccount();
+      toast(tr(index < 0 ? "Товар добавлен в избранное" : "Товар удалён из избранного"));
+    }
+    function renderAccount() {
+      const user = currentUser();
+      if (!user) return;
+      const favorites = byId("favoriteList"); favorites.replaceChildren();
+      const favoriteProducts = state.favorites.filter(item => item.userId === user.id)
+        .map(item => state.products.find(product => product.id === item.productId)).filter(Boolean);
+      if (!favoriteProducts.length) favorites.append(el("p", "rounded-xl bg-slate-50 p-4 text-sm text-slate-500 sm:col-span-2", "Пока нет избранных товаров."));
+      for (const product of favoriteProducts) {
+        const row = el("div", "flex items-center justify-between gap-3 rounded-xl border border-slate-100 p-3");
+        row.append(el("div", "min-w-0", `${product.name} · ${formatMoney(product.price)}`));
+        const remove = el("button", "shrink-0 text-sm font-semibold text-red-600", "Убрать");
+        remove.type = "button"; remove.addEventListener("click", () => toggleFavorite(product.id));
+        row.append(remove); favorites.append(row);
+      }
+      const orders = byId("userOrderList"); orders.replaceChildren();
+      const statusNames = { new: "Новый", processing: "В обработке", completed: "Завершён", cancelled: "Отменён" };
+      const userOrders = state.orders.filter(order => order.userId === user.id);
+      if (!userOrders.length) orders.append(el("p", "rounded-xl bg-slate-50 p-4 text-sm text-slate-500", "Заказов пока нет."));
+      for (const order of userOrders) {
+        const card = el("article", "rounded-xl border border-slate-100 p-4");
+        card.append(el("div", "flex flex-wrap justify-between gap-2 font-bold", `${order.id} · ${formatMoney(order.total)}`));
+        card.append(el("p", "mt-1 text-sm text-violet-700", tr("Статус: {status}", { status: statusNames[order.status] || "Неизвестен" })));
+        card.append(el("p", "mt-1 text-xs text-slate-500", order.items.map(item => `${item.name} × ${item.quantity}`).join(" · ")));
+        card.append(el("p", "mt-1 text-xs text-slate-400", new Date(order.createdAt).toLocaleString(LANGUAGE_LOCALES[currentLanguage])));
+        orders.append(card);
+      }
+    }
+    function imageNode(src, alt, className) {
+      const fallback = () => {
+        const original = alt ? `Фото недоступно\n${alt}` : "Фото недоступно";
+        const placeholder = el("div", "image-fallback text-sm text-slate-500", alt ? `${tr("Фото недоступно")}\n${alt}` : "Фото недоступно");
+        placeholder.firstChild.__ramzOriginalText = original;
+        placeholder.setAttribute("role", "img");
+        placeholder.setAttribute("aria-label", alt ? `${tr("Фото недоступно")}: ${alt}` : tr("Фото недоступно"));
+        return placeholder;
+      };
+      if (!validImage(src)) return fallback();
+      const image = el("img", className);
+      image.src = validImage(src);
+      image.alt = alt;
+      image.loading = "lazy";
+      image.decoding = "async";
+      image.addEventListener("error", () => image.replaceWith(fallback()), { once: true });
+      return image;
+    }
+    function createProductCard(product) {
+      const article = el("article", "product-card group overflow-hidden rounded-2xl border border-violet-100 bg-white");
+      const visual = el("div", "product-image relative aspect-[4/3] overflow-hidden");
+      visual.append(imageNode(product.image, product.name, "h-full w-full object-cover"));
+      if (product.stock <= 3 && product.stock > 0) visual.append(el("span", "absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold text-amber-700 shadow-sm", "Мало осталось"));
+      const body = el("div", "p-3.5 sm:p-4");
+      const rating = el("div", "mb-2 flex items-center gap-1 text-xs text-amber-500", "★");
+      rating.append(el("span", "font-bold text-ink", product.rating.toFixed(1)), el("span", "text-slate-400", "·"), el("span", "text-slate-400", categoryName(product.category)));
+      const title = el("h3", "line-clamp-2 min-h-10 text-sm font-bold leading-5 sm:text-[15px]", product.name);
+      const description = el("p", "mt-1 line-clamp-2 min-h-8 text-xs leading-4 text-slate-500", productDescription(product));
+      if (product.color) description.textContent += ` · ${product.color}`;
+      const priceRow = el("div", "mt-3 flex items-end justify-between gap-1");
+      priceRow.append(el("p", "display text-base font-extrabold tracking-tight sm:text-lg", formatMoney(product.price)));
+      priceRow.append(el("p", `shrink-0 text-[10px] ${product.stock > 0 ? "text-slate-400" : "font-semibold text-red-600"}`, product.stock > 0 ? tr("В наличии: {count}", { count: product.stock }) : "Нет в наличии"));
+      const add = el("button", "mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-ink text-xs font-bold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 sm:text-sm", product.stock > 0 ? "＋ В корзину" : "Нет в наличии");
+      add.type = "button"; add.disabled = product.stock < 1;       add.setAttribute("aria-label", tr(product.stock > 0 ? "Добавить в корзину: {name}" : "Нет в наличии: {name}", { name: product.name }));
+      add.addEventListener("click", () => addToCart(product.id));
+      const favorite = el("button", "absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/95 text-xl shadow-sm hover:text-red-600", isFavorite(product.id) ? "♥" : "♡");
+      favorite.type = "button";
+      favorite.setAttribute("aria-label", tr(isFavorite(product.id) ? "Убрать из избранного: {name}" : "Добавить в избранное: {name}", { name: product.name }));
+      favorite.setAttribute("aria-pressed", String(isFavorite(product.id)));
+      favorite.addEventListener("click", () => toggleFavorite(product.id));
+      visual.append(favorite);
+      body.append(rating, title, description, priceRow, add);
+      article.append(visual, body);
+      return article;
+    }
+    function renderProducts() {
+      const query = byId("searchInput").value.trim().toLocaleLowerCase(currentLanguage);
+      const sort = byId("sortSelect").value;
+      const filtered = state.products.filter(product =>
+        (selectedCategory === "all" || product.category === selectedCategory) &&
+        (!query || `${product.name} ${productDescription(product)} ${categoryName(product.category)}`.toLocaleLowerCase(currentLanguage).includes(query))
+      );
+      if (sort === "price-asc") filtered.sort((a, b) => a.price - b.price);
+      if (sort === "price-desc") filtered.sort((a, b) => b.price - a.price);
+      if (sort === "rating") filtered.sort((a, b) => b.rating - a.rating);
+      if (sort === "popular") filtered.sort((a, b) => b.rating - a.rating || a.price - b.price);
+      byId("resultCount").textContent = tr("Найдено товаров: {count}", { count: filtered.length });
+      byId("clearFilters").classList.toggle("hidden", !query && selectedCategory === "all" && sort === "popular");
+      const grid = byId("productGrid");
+      grid.replaceChildren();
+      if (!filtered.length) {
+        const empty = el("div", "col-span-full rounded-2xl border border-dashed border-violet-200 bg-white py-16 text-center");
+        empty.append(el("div", "text-4xl", "⌕"), el("h3", "mt-3 text-lg font-bold", "Ничего не нашлось"), el("p", "mt-1 text-sm text-slate-500", "Попробуйте изменить запрос или выбрать другую категорию."));
+        grid.append(empty);
+        return;
+      }
+      const fragment = document.createDocumentFragment();
+      for (const product of filtered) fragment.append(createProductCard(product));
+      grid.append(fragment);
+    }
+    function addToCart(productId) {
+      const product = state.products.find(item => item.id === productId);
+      if (!product || product.stock <= 0) { toast("Товар закончился.", "error"); return; }
+      const item = state.cart.find(entry => entry.productId === productId);
+      if ((item?.quantity || 0) >= product.stock) { toast(tr("Доступно только {count} шт.", { count: product.stock }), "error"); return; }
+      if (item) item.quantity += 1;
+      else state.cart.push({ productId, quantity: 1 });
+      persist(); updateHeader(); renderProducts();
+      toast(tr("Товар добавлен в корзину: {name}", { name: product.name }));
+    }
+    function renderCart() {
+      const root = byId("cartContent");
+      root.replaceChildren();
+      state.cart = state.cart.filter(item => state.products.some(product => product.id === item.productId));
+      if (!state.cart.length) {
+        const empty = el("div", "py-10 text-center");
+        empty.append(el("div", "text-5xl", "🛍"), el("h3", "mt-4 text-lg font-bold", "Корзина пока пуста"), el("p", "mt-1 text-sm text-slate-500", "Самое время найти что-нибудь особенное."));
+        const link = el("button", "mt-5 rounded-xl bg-ink px-5 py-3 text-sm font-bold text-white hover:bg-violet-700", "Перейти к покупкам");
+        link.type = "button"; link.addEventListener("click", () => closeDialog("cartDialog"));
+        empty.append(link); root.append(empty); return;
+      }
+      const list = el("div", "divide-y divide-slate-100");
+      for (const item of state.cart) {
+        const product = state.products.find(candidate => candidate.id === item.productId);
+        const row = el("div", "flex gap-3 py-4");
+        const imageWrap = el("div", "h-[76px] w-[82px] shrink-0 overflow-hidden rounded-xl bg-violet-50");
+        imageWrap.append(imageNode(product.image, product.name, "h-full w-full object-cover"));
+        const info = el("div", "min-w-0 flex-1");
+        info.append(el("h3", "line-clamp-2 text-sm font-bold", product.name), el("p", "mt-1 text-sm font-extrabold text-violet-700", formatMoney(product.price)));
+        const actions = el("div", "mt-2 flex items-center justify-between gap-3");
+        const quantity = el("div", "flex h-8 items-center overflow-hidden rounded-lg border border-slate-200");
+        const decrease = el("button", "h-full w-8 text-lg hover:bg-slate-100", "−");
+        decrease.type = "button"; decrease.setAttribute("aria-label", tr("Уменьшить количество: {name}", { name: product.name }));
+        decrease.addEventListener("click", () => changeCartQuantity(product.id, -1));
+        const count = el("span", "min-w-8 text-center text-xs font-bold", item.quantity);
+        const increase = el("button", "h-full w-8 text-lg hover:bg-slate-100 disabled:text-slate-300", "+");
+        increase.type = "button"; increase.disabled = item.quantity >= product.stock; increase.setAttribute("aria-label", tr("Увеличить количество: {name}", { name: product.name }));
+        increase.addEventListener("click", () => changeCartQuantity(product.id, 1));
+        quantity.append(decrease, count, increase);
+        const remove = el("button", "text-xs font-semibold text-slate-400 hover:text-red-600", "Удалить");
+        remove.type = "button"; remove.addEventListener("click", () => removeFromCart(product.id));
+        actions.append(quantity, remove);
+        info.append(actions); row.append(imageWrap, info); list.append(row);
+      }
+      root.append(list);
+      const subtotal = cartSubtotal();
+      const summary = el("div", "mt-3 space-y-2 border-t border-slate-100 pt-4");
+      const subtotalRow = el("div", "flex justify-between text-sm text-slate-500"); subtotalRow.append(el("span", "", "Товары"), el("span", "font-semibold text-ink", formatMoney(subtotal)));
+      const deliveryRow = el("div", "flex justify-between text-sm text-slate-500"); deliveryRow.append(el("span", "", "Доставка"), el("span", "font-semibold text-ink", cartDelivery(subtotal) ? formatMoney(cartDelivery(subtotal)) : "Бесплатно"));
+      summary.append(subtotalRow, deliveryRow);
+      if (state.promo) {
+        const promo = findPromo();
+        const discountRow = el("div", "flex justify-between text-sm text-emerald-700"); discountRow.append(el("span", "", tr("Промокод {code}", { code: promo?.code || state.promo })), el("span", "font-semibold", `−${formatMoney(cartDiscount(subtotal))}`));
+        const promoWarning = promoProblem(promo, subtotal);
+        if (promoWarning) discountRow.append(el("span", "ml-2 text-xs text-red-600", promoWarning));
+        const removePromo = el("button", "text-xs font-semibold text-slate-400 hover:text-red-600", "Убрать промокод"); removePromo.type = "button"; removePromo.addEventListener("click", () => { state.promo = null; persist(); renderCart(); });
+        summary.append(discountRow, removePromo);
+      }
+      const totalRow = el("div", "flex justify-between border-t border-slate-100 pt-3 text-base font-extrabold"); totalRow.append(el("span", "", "Итого"), el("span", "text-violet-700", formatMoney(cartTotal(subtotal))));
+      summary.append(totalRow);
+      const promoForm = el("form", "mt-4 flex gap-2");
+      const promoInput = el("input", "field min-w-0 py-2.5 text-sm"); promoInput.placeholder = tr("Промокод"); promoInput.setAttribute("aria-label", tr("Промокод"));
+      const apply = el("button", "shrink-0 rounded-xl border border-violet-200 px-4 text-sm font-bold text-violet-700 hover:bg-violet-50", "Применить"); apply.type = "submit";
+      promoForm.append(promoInput, apply);
+      promoForm.addEventListener("submit", event => { event.preventDefault(); applyPromo(promoInput.value); });
+      const checkout = el("button", "btn-primary mt-3 w-full", "Оформить заказ");
+      checkout.type = "button"; checkout.addEventListener("click", beginCheckout);
+      root.append(summary, promoForm, checkout);
+    }
+    function changeCartQuantity(productId, delta) {
+      const item = state.cart.find(entry => entry.productId === productId);
+      const product = state.products.find(entry => entry.id === productId);
+      if (!item || !product) return;
+      const next = item.quantity + delta;
+      if (next > product.stock) { toast(tr("В наличии только {count} шт.", { count: product.stock }), "error"); return; }
+      if (next < 1) state.cart = state.cart.filter(entry => entry.productId !== productId);
+      else item.quantity = next;
+      persist(); updateHeader(); renderCart(); renderProducts();
+    }
+    function removeFromCart(productId) {
+      state.cart = state.cart.filter(item => item.productId !== productId);
+      persist(); updateHeader(); renderCart(); renderProducts(); toast(tr("Товар удалён из корзины"));
+    }
+    function applyPromo(rawCode) {
+      const code = safeText(rawCode, 20).toUpperCase();
+      if (state.promo) { toast(tr("Скидки не суммируются. Сначала уберите текущий промокод."), "error"); return; }
+      const promo = findPromo(code);
+      const problem = promoProblem(promo, cartSubtotal());
+      if (problem) { toast(problem, "error"); return; }
+      state.promo = code; persist(); renderCart(); toast(tr("Промокод {code} применён", { code }));
+    }
+    function beginCheckout() {
+      if (!state.cart.length) { toast(tr("Добавьте товары в корзину."), "error"); return; }
+      if (!currentUser()) { pendingCheckout = true; closeDialog("cartDialog"); setAuthMode("login"); dialogOpen(byId("authDialog")); toast(tr("Войдите или создайте аккаунт, чтобы оформить заказ.")); return; }
+      closeDialog("cartDialog"); openCheckout();
+    }
+    function openCheckout() {
+      if (!currentUser()) { pendingCheckout = true; dialogOpen(byId("authDialog")); return; }
+      byId("checkoutError").classList.add("hidden");
+      byId("customerName").value = currentUser().name;
+      byId("customerEmail").value = currentUser().email;
+      clearFieldError("customerEmailError");
+      clearFieldError("customerPhoneError");
+      byId("checkoutSummary").textContent = tr("К оплате при получении: {amount}", { amount: formatMoney(cartTotal()) });
+      dialogOpen(byId("checkoutDialog"));
+    }
+    function setAuthMode(mode) {
+      authMode = mode;
+      const registering = mode === "register";
+      byId("authTitle").textContent = tr(registering ? "Создать аккаунт" : "Войти в аккаунт");
+      byId("authNameGroup").classList.toggle("hidden", !registering);
+      byId("authFirstName").required = registering;
+      byId("authLastName").required = registering;
+      byId("confirmPasswordGroup").classList.toggle("hidden", !registering);
+      byId("authPasswordConfirm").required = registering;
+      byId("authPassword").autocomplete = registering ? "new-password" : "current-password";
+      byId("authPassword").minLength = registering ? 8 : 1;
+      byId("authPassword").placeholder = tr(registering ? "Не менее 8 символов" : "Пароль");
+      byId("authSubmitLabel").textContent = tr(registering ? "Зарегистрироваться" : "Войти");
+      byId("loginTab").className = registering ? "rounded-lg py-2 text-sm font-semibold text-slate-500" : "rounded-lg bg-white py-2 text-sm font-bold shadow-sm";
+      byId("registerTab").className = registering ? "rounded-lg bg-white py-2 text-sm font-bold shadow-sm" : "rounded-lg py-2 text-sm font-semibold text-slate-500";
+      byId("authError").classList.add("hidden");
+      ["authFirstNameError", "authLastNameError", "authEmailError", "authPasswordError", "authConfirmError"].forEach(id => clearFieldError(id));
+    }
+    function showFormError(id, message) { const node = byId(id); node.textContent = tr(message); node.classList.remove("hidden"); }
+    function showFieldError(id, message) { const node = byId(id); node.textContent = tr(message); node.classList.toggle("hidden", !message); }
+    function clearFieldError(id) { showFieldError(id, ""); }
+    function validName(value) {
+      const name = safeText(value, 40);
+      return name.length >= 2 && name.length <= 40 && /^[\p{L}]+(?:[ '\u2019-][\p{L}]+)*$/u.test(name);
+    }
+    function validEmail(value) {
+      if (typeof value !== "string" || value.length > 254) return false;
+      const at = value.lastIndexOf("@");
+      if (at < 1 || at > 64) return false;
+      const local = value.slice(0, at);
+      const domain = value.slice(at + 1);
+      return !local.startsWith(".") && !local.endsWith(".") && !local.includes("..") &&
+        /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/i.test(local) &&
+        /^[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$/i.test(domain);
+    }
+    function normalizeKazakhstanPhone(value) {
+      const input = value.trim();
+      if (!/^\+?[\d\s()-]+$/.test(input)) return "";
+      let digits = input.replace(/\D/g, "");
+      if (digits.length === 10 && /^[67]/.test(digits)) digits = `7${digits}`;
+      else if (digits.length === 11 && digits.startsWith("8")) digits = `7${digits.slice(1)}`;
+      return /^7[67]\d{9}$/.test(digits) ? `+${digits}` : "";
+    }
+    function validateCheckoutField(id) {
+      if (id === "customerEmail") {
+        const email = byId(id).value.trim();
+        const message = !email ? "Укажите электронную почту." : validEmail(email) ? "" : "Введите корректный адрес электронной почты.";
+        showFieldError("customerEmailError", message);
+      }
+      if (id === "customerPhone") {
+        const phone = byId(id).value;
+        const message = !phone.trim() ? "Укажите номер телефона." : normalizeKazakhstanPhone(phone) ? "" : "Введите корректный номер Казахстана: +7 и 10 цифр, код начинается с 6 или 7.";
+        showFieldError("customerPhoneError", message);
+      }
+    }
+    ["customerEmail", "customerPhone"].forEach(id => {
+      byId(id).addEventListener("input", () => validateCheckoutField(id));
+    });
+    function passwordProblem(password) {
+      if (password.length < 8) return "Пароль должен содержать не менее 8 символов.";
+      if (password.length > 128) return "Пароль не должен быть длиннее 128 символов.";
+      if (!/\p{Lu}/u.test(password)) return "Добавьте хотя бы одну заглавную букву.";
+      if (!/\p{Ll}/u.test(password)) return "Добавьте хотя бы одну строчную букву.";
+      if (!/\d/.test(password)) return "Добавьте хотя бы одну цифру.";
+      return "";
+    }
+    function validateAuthField(id) {
+      if (id === "authFirstName") showFieldError("authFirstNameError", validName(byId(id).value) ? "" : "Укажите имя из 2–40 букв; допустимы пробел, дефис и апостроф.");
+      if (id === "authLastName") showFieldError("authLastNameError", validName(byId(id).value) ? "" : "Укажите фамилию из 2–40 букв; допустимы пробел, дефис и апостроф.");
+      if (id === "authEmail") {
+        const email = byId(id).value.trim().toLowerCase();
+        let message = validEmail(email) ? "" : "Введите корректный адрес электронной почты.";
+        if (!message && authMode === "register" && state.users.some(user => user.email.toLowerCase() === email)) message = "Аккаунт с такой почтой уже существует.";
+        showFieldError("authEmailError", message);
+      }
+      if (id === "authPassword") {
+        const password = byId(id).value;
+        showFieldError("authPasswordError", authMode === "register" ? passwordProblem(password) : (password.length > 128 ? "Пароль слишком длинный." : ""));
+        if (authMode === "register" && byId("authPasswordConfirm").value) validateAuthField("authPasswordConfirm");
+      }
+      if (id === "authPasswordConfirm") {
+        const confirmation = byId(id).value;
+        const message = !confirmation ? "Повторите пароль." : confirmation === byId("authPassword").value ? "" : "Пароли не совпадают.";
+        showFieldError("authConfirmError", message);
+      }
+    }
+    ["authFirstName", "authLastName", "authEmail", "authPassword", "authPasswordConfirm"].forEach(id => {
+      byId(id).addEventListener("input", () => validateAuthField(id));
+    });
+    for (const [buttonId, inputId] of [["togglePassword", "authPassword"], ["toggleConfirmPassword", "authPasswordConfirm"]]) {
+      byId(buttonId).addEventListener("click", () => {
+        const input = byId(inputId);
+        const visible = input.type === "password";
+        input.type = visible ? "text" : "password";
+        byId(buttonId).textContent = tr(visible ? "Скрыть" : "Показать");
+        byId(buttonId).setAttribute("aria-label", tr(visible ? "Скрыть {field}" : "Показать {field}", { field: tr(inputId === "authPassword" ? "пароль" : "подтверждение пароля") }));
+        byId(buttonId).setAttribute("aria-pressed", String(visible));
+      });
+    }
+    byId("authButton").addEventListener("click", () => {
+      if (currentUser()) {
+        state.currentUserId = null; persist(); updateHeader(); toast(tr("Вы вышли из аккаунта.")); return;
+      }
+      pendingCheckout = false; setAuthMode("login"); dialogOpen(byId("authDialog"));
+    });
+    byId("loginTab").addEventListener("click", () => setAuthMode("login"));
+    byId("registerTab").addEventListener("click", () => setAuthMode("register"));
+    byId("authForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const email = byId("authEmail").value.trim().toLowerCase();
+      const password = byId("authPassword").value;
+      const error = byId("authError"); error.classList.add("hidden");
+      validateAuthField("authEmail");
+      validateAuthField("authPassword");
+      const registering = authMode === "register";
+      if (registering) {
+        validateAuthField("authFirstName");
+        validateAuthField("authLastName");
+        validateAuthField("authPasswordConfirm");
+      }
+      if (!validEmail(email) || password.length < 1 || password.length > 128 ||
+        byId("authEmailError").textContent || byId("authPasswordError").textContent ||
+        (registering && (byId("authFirstNameError").textContent || byId("authLastNameError").textContent || byId("authConfirmError").textContent))) return;
+      let user;
+      if (registering) {
+        const firstName = safeText(byId("authFirstName").value, 40);
+        const lastName = safeText(byId("authLastName").value, 40);
+        if (state.users.some(candidate => candidate.email.toLowerCase() === email)) {
+          showFieldError("authEmailError", "Аккаунт с такой почтой уже существует."); return;
+        }
+        user = { id: uid(), firstName, lastName, name: `${firstName} ${lastName}`, email, password, role: "customer" };
+        const next = JSON.parse(JSON.stringify(state));
+        next.users.push(user);
+        next.currentUserId = user.id;
+        if (!commitSnapshot(next)) return;
+      } else {
+        user = state.users.find(candidate => candidate.email === email && candidate.password === password);
+        if (!user) { showFormError("authError", "Неверная почта или пароль."); return; }
+        const next = JSON.parse(JSON.stringify(state)); next.currentUserId = user.id;
+        if (!commitSnapshot(next)) return;
+      }
+      updateHeader(); closeDialog("authDialog"); byId("authForm").reset();
+      toast(tr("Добро пожаловать, {name}!", { name: user.name.split(/\s+/)[0] }));
+      if (pendingCheckout) { pendingCheckout = false; openCheckout(); }
+    });
+    byId("cartButton").addEventListener("click", () => { renderCart(); dialogOpen(byId("cartDialog")); });
+    byId("checkoutForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const user = currentUser();
+      if (!user) { pendingCheckout = true; closeDialog("checkoutDialog"); dialogOpen(byId("authDialog")); return; }
+      const customerName = safeText(byId("customerName").value, 120);
+      const customerEmail = byId("customerEmail").value.trim().toLowerCase();
+      const phone = normalizeKazakhstanPhone(byId("customerPhone").value);
+      const address = safeText(byId("customerAddress").value, 300);
+      const comment = safeText(byId("customerComment").value, 500);
+      byId("checkoutError").classList.add("hidden");
+      validateCheckoutField("customerEmail");
+      validateCheckoutField("customerPhone");
+      if (customerName.length < 5 || customerName.split(/\s+/).length < 2) { showFormError("checkoutError", "Укажите имя и фамилию полностью."); return; }
+      if (byId("customerEmailError").textContent) { byId("customerEmail").focus(); return; }
+      if (byId("customerPhoneError").textContent) { byId("customerPhone").focus(); return; }
+      if (address.length < 8) { showFormError("checkoutError", "Укажите полный адрес доставки."); return; }
+      if (!state.cart.length) { closeDialog("checkoutDialog"); toast("Корзина пуста.", "error"); return; }
+      const requested = new Map();
+      for (const entry of state.cart) {
+        if (!entry || typeof entry.productId !== "string" || !Number.isSafeInteger(entry.quantity) || entry.quantity < 1) {
+          showFormError("checkoutError", "В корзине есть некорректное количество товара."); return;
+        }
+        requested.set(entry.productId, (requested.get(entry.productId) || 0) + entry.quantity);
+      }
+      const lines = [];
+      for (const [productId, quantity] of requested) {
+        const product = state.products.find(item => item.id === productId);
+        if (!product || quantity > product.stock) {
+          showFormError("checkoutError", tr("Недостаточно товара «{name}». Обновите количество.", { name: product?.name || "в корзине" }));
+          renderCart(); return;
+        }
+        lines.push({ product, quantity, price: product.price });
+      }
+      const subtotal = lines.reduce((sum, line) => sum + line.product.price * line.quantity, 0);
+      const promo = findPromo();
+      if (state.promo && promoProblem(promo, subtotal)) {
+        showFormError("checkoutError", promoProblem(promo, subtotal)); return;
+      }
+      const delivery = cartDelivery(subtotal);
+      const discount = cartDiscount(subtotal);
+      const total = Math.max(0, subtotal + delivery - discount);
+      if (![subtotal, delivery, discount, total].every(Number.isSafeInteger) || total < 0) {
+        showFormError("checkoutError", "Не удалось проверить сумму заказа. Проверьте корзину."); return;
+      }
+      const order = {
+        id: `RS-${Date.now().toString(36).toUpperCase()}-${uid().slice(-4).toUpperCase()}`, userId: user.id, customerName, phone,
+        customerEmail, address, comment, items: lines.map(line => ({ productId: line.product.id, name: line.product.name, quantity: line.quantity, price: line.price })),
+        subtotal, delivery, discount, total, promoCode: state.promo, status: "new", stockRestored: false, createdAt: new Date().toISOString()
+      };
+      const next = JSON.parse(JSON.stringify(state));
+      for (const line of lines) {
+        const product = next.products.find(item => item.id === line.product.id);
+        product.stock -= line.quantity;
+        next.stockHistory.unshift({ productId: product.id, productName: product.name, delta: -line.quantity, reason: `Заказ ${order.id}`, createdAt: order.createdAt });
+      }
+      if (order.promoCode) next.promos.find(item => item.code === order.promoCode).uses += 1;
+      next.orders.unshift(order); next.cart = []; next.promo = null;
+      if (!commitSnapshot(next)) return;
+      updateHeader(); renderProducts();
+      if (isAdmin() && byId("adminDialog").open) renderAdmin();
+      if (byId("accountDialog").open) renderAccount();
+      byId("checkoutForm").reset(); closeDialog("checkoutDialog");
+      toast(tr("Заказ {id} оформлен! Оплата при получении.", { id: order.id }));
+    });
+    byId("accountButton").addEventListener("click", () => {
+      if (!currentUser()) { toast("Войдите в аккаунт, чтобы открыть покупки.", "error"); return; }
+      renderAccount(); dialogOpen(byId("accountDialog"));
+    });
+    byId("searchInput").addEventListener("input", renderProducts);
+    byId("sortSelect").addEventListener("change", renderProducts);
+    byId("clearFilters").addEventListener("click", () => {
+      byId("searchInput").value = ""; byId("sortSelect").value = "popular"; selectedCategory = "all"; renderCategories(); renderProducts();
+    });
+    document.addEventListener("keydown", event => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); byId("searchInput").focus(); }
+    });
+    document.addEventListener("click", event => {
+      const close = event.target.closest("[data-close]");
+      if (close) closeDialog(close.dataset.close);
+      if (event.target instanceof HTMLDialogElement && event.target.open) event.target.close();
+    });
+    function metricCard(label, value, note) {
+      const card = el("div", "rounded-2xl border border-violet-100 bg-violet-50/70 p-4");
+      card.append(el("p", "text-xs font-semibold text-slate-500", label), el("p", "display mt-2 text-xl font-extrabold", value), el("p", "mt-1 text-[11px] text-slate-500", note));
+      return card;
+    }
+    function renderAdmin() {
+      if (!isAdmin()) { toast("Доступ только для администратора.", "error"); closeDialog("adminDialog"); return; }
+      const completedOrders = state.orders.filter(order => order.status === "completed");
+      const revenue = completedOrders.reduce((sum, order) => sum + order.total, 0);
+      const average = completedOrders.length ? Math.round(revenue / completedOrders.length) : 0;
+      const metrics = byId("adminMetrics"); metrics.replaceChildren(
+        metricCard("Товаров в каталоге", String(state.products.length), "включая товары без остатка"),
+        metricCard("Всего заказов", String(state.orders.length), tr("{count} новых", { count: state.orders.filter(order => order.status === "new").length })),
+        metricCard("Выручка", formatMoney(revenue), "только завершённые заказы"),
+        metricCard("Средний чек", formatMoney(average), tr("по {count} завершённым заказам", { count: completedOrders.length }))
+      );
+      byId("adminProductCount").textContent = `(${state.products.length})`;
+      const productList = byId("adminProductList"); productList.replaceChildren();
+      if (!state.products.length) productList.append(el("p", "rounded-xl bg-slate-50 p-5 text-sm text-slate-500", "В каталоге пока нет товаров."));
+      for (const product of state.products) {
+        const row = el("div", "flex flex-wrap items-center gap-3 rounded-xl border border-slate-100 p-3");
+        const image = el("div", "grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-lg bg-violet-50"); image.append(imageNode(product.image, product.name, "h-full w-full object-cover"));
+        const details = el("div", "min-w-[140px] flex-1");
+        details.append(el("p", "text-sm font-bold", product.name), el("p", "mt-1 text-xs text-slate-500", tr("{category}{color} · {price} · Остаток: {stock}", { category: categoryName(product.category), color: product.color ? ` · ${product.color}` : "", price: formatMoney(product.price), stock: product.stock })));
+        const edit = el("button", "rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold hover:bg-slate-50", "Изменить"); edit.type = "button"; edit.addEventListener("click", () => openProductEditor(product));
+        const remove = el("button", "rounded-lg border border-red-100 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50", "Удалить"); remove.type = "button"; remove.addEventListener("click", () => deleteProduct(product.id));
+        const stockInput = el("input", "w-24 rounded-lg border border-slate-200 px-2 py-2 text-xs");
+        stockInput.type = "number"; stockInput.min = "0"; stockInput.max = "100000"; stockInput.step = "1"; stockInput.value = String(product.stock);
+        stockInput.setAttribute("aria-label", tr("Новый остаток: {name}", { name: product.name }));
+        const stockSave = el("button", "rounded-lg border border-violet-200 px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-50", "Склад");
+        stockSave.type = "button"; stockSave.addEventListener("click", () => setProductStock(product.id, stockInput.value));
+        row.append(image, details, stockInput, stockSave, edit, remove); productList.append(row);
+      }
+      renderAdminOrders();
+      renderPromos();
+      renderInventory();
+    }
+    function renderAdminOrders() {
+      const orderList = byId("adminOrderList"); orderList.replaceChildren();
+      const query = byId("orderSearch").value.trim().toLocaleLowerCase(currentLanguage);
+      const statusFilter = byId("orderStatusFilter").value;
+      const filtered = state.orders.filter(order => {
+        const owner = state.users.find(user => user.id === order.userId);
+        const searchable = `${order.id} ${order.customerName} ${order.customerEmail || owner?.email || ""} ${order.phone} ${order.address}`.toLocaleLowerCase(currentLanguage);
+        return (statusFilter === "all" || order.status === statusFilter) && (!query || searchable.includes(query));
+      });
+      if (!filtered.length) {
+        orderList.append(el("p", "rounded-xl bg-slate-50 p-6 text-center text-sm text-slate-500", state.orders.length ? "По выбранным условиям заказов нет." : "Заказов пока нет."));
+        return;
+      }
+      const statusNames = { new: "Новый", processing: "В обработке", completed: "Завершён", cancelled: "Отменён" };
+      for (const order of filtered) {
+        const card = el("article", "rounded-2xl border border-slate-100 p-4");
+        const top = el("div", "flex flex-wrap items-start justify-between gap-3");
+        const owner = state.users.find(user => user.id === order.userId);
+        const info = el("div"); info.append(el("h4", "font-bold", `${order.id} · ${order.customerName}`), el("p", "mt-1 text-xs text-slate-500", `${order.customerEmail || owner?.email || tr("Email не сохранён")} · ${order.phone}`), el("p", "mt-1 text-xs text-slate-500", order.address), el("p", "mt-1 text-xs text-slate-500", new Date(order.createdAt).toLocaleString(LANGUAGE_LOCALES[currentLanguage])));
+        const control = el("div", "flex items-center gap-2");
+        control.append(el("span", "text-sm font-extrabold text-violet-700", formatMoney(order.total)));
+        const select = el("select", "rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs font-semibold");         select.setAttribute("aria-label", tr("Статус заказа {id}", { id: order.id }));
+        for (const [value, label] of Object.entries(statusNames)) { const option = el("option", "", label); option.value = value; option.selected = order.status === value; select.append(option); }
+        if (order.status === "cancelled" || order.status === "completed") select.disabled = true;
+        select.addEventListener("change", () => {
+          if (!isAdmin()) { select.value = order.status; toast("Требуется вход администратора.", "error"); return; }
+          if (select.value === order.status) return;
+          if (order.status === "cancelled" || order.status === "completed") {
+            select.value = order.status; toast("Завершённый или отменённый заказ изменить нельзя.", "error"); return;
+          }
+          if (select.value === "cancelled" && !window.confirm(tr("Отменить заказ {id} и вернуть товары на склад?", { id: order.id }))) {
+            select.value = order.status; return;
+          }
+          const next = JSON.parse(JSON.stringify(state));
+          const nextOrder = next.orders.find(item => item.id === order.id);
+          if (select.value === "cancelled" && !nextOrder.stockRestored) {
+            const canRestore = nextOrder.items.every(item => {
+              const product = next.products.find(candidate => candidate.id === item.productId);
+              return product && product.stock + item.quantity <= 100000;
+            });
+            if (!canRestore) { select.value = order.status; toast(tr("Нельзя отменить заказ: проверьте наличие товара и предел остатка."), "error"); return; }
+            for (const item of nextOrder.items) {
+              const product = next.products.find(candidate => candidate.id === item.productId);
+              product.stock += item.quantity;
+              next.stockHistory.unshift({ productId: product.id, productName: product.name, delta: item.quantity, reason: `Возврат заказа ${order.id}`, createdAt: new Date().toISOString() });
+            }
+            nextOrder.stockRestored = true;
+          }
+          nextOrder.status = select.value;
+          if (!commitSnapshot(next)) { select.value = order.status; return; }
+          renderAdmin(); renderProducts(); renderAccount(); toast(tr("Статус заказа обновлён"));
+        });
+        control.append(select); top.append(info, control); card.append(top);
+        for (const item of order.items) {
+          const lineTotal = item.price * item.quantity;
+          card.append(el("p", "mt-3 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-500", `${item.name} × ${item.quantity} · ${formatMoney(item.price)} / шт. · ${formatMoney(lineTotal)}`));
+        }
+        card.append(el("p", "mt-2 text-xs text-slate-500", `Товары: ${formatMoney(order.subtotal)} · Доставка: ${formatMoney(order.delivery)} · Скидка: ${formatMoney(order.discount)}`));
+        if (order.comment) card.append(el("p", "mt-2 text-xs text-slate-500", `Комментарий: ${order.comment}`));
+        orderList.append(card);
+      }
+    }
+    function renderPromos() {
+      const root = byId("adminPromoList"); root.replaceChildren();
+      if (!state.promos.length) root.append(el("p", "rounded-xl bg-slate-50 p-5 text-sm text-slate-500", "Промокодов пока нет."));
+      for (const promo of state.promos) {
+        const row = el("article", "flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-100 p-3");
+        const details = el("div", "min-w-[180px] flex-1");
+        const discount = promo.type === "percent" ? `${promo.value}%` : formatMoney(promo.value);
+        details.append(el("p", "font-bold", `${promo.code} · ${discount}`),
+          el("p", "mt-1 text-xs text-slate-500", tr("От {amount} · {starts} — {ends}", { amount: formatMoney(promo.minimum), starts: new Date(promo.startsAt).toLocaleString(LANGUAGE_LOCALES[currentLanguage]), ends: new Date(promo.endsAt).toLocaleString(LANGUAGE_LOCALES[currentLanguage]) })),
+          el("p", "mt-1 text-xs text-slate-500", tr("Использовано {uses} из {limit} · {status}", { uses: promo.uses, limit: promo.limit, status: promo.active ? tr("активен") : tr("отключён") })));
+        const edit = el("button", "rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold", "Изменить"); edit.type = "button"; edit.addEventListener("click", () => openPromoEditor(promo));
+        const toggle = el("button", "rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold", promo.active ? "Отключить" : "Включить");
+        toggle.type = "button"; toggle.addEventListener("click", () => {
+          if (!isAdmin()) { toast("Требуется вход администратора.", "error"); return; }
+          const next = JSON.parse(JSON.stringify(state)); next.promos.find(item => item.id === promo.id).active = !promo.active;
+          if (!commitSnapshot(next)) return;
+          renderPromos(); toast(tr(promo.active ? "Промокод отключён" : "Промокод включён"));
+        });
+        const remove = el("button", "rounded-lg border border-red-100 px-3 py-2 text-xs font-bold text-red-600", "Удалить");
+        remove.type = "button"; remove.addEventListener("click", () => {
+          if (!isAdmin()) { toast("Требуется вход администратора.", "error"); return; }
+          if (!window.confirm(tr("Удалить промокод {code}?", { code: promo.code }))) return;
+          const next = JSON.parse(JSON.stringify(state)); next.promos = next.promos.filter(item => item.id !== promo.id);
+          if (next.promo === promo.code) next.promo = null;
+          if (!commitSnapshot(next)) return;
+          renderPromos(); renderCart(); toast(tr("Промокод удалён"));
+        });
+        row.append(details, edit, toggle, remove); root.append(row);
+      }
+    }
+    function translateStockReason(reason) {
+      const orderReturn = /^Возврат заказа (.+)$/.exec(reason);
+      if (orderReturn) return `${tr("Возврат заказа")} ${orderReturn[1]}`;
+      const order = /^Заказ (.+)$/.exec(reason);
+      if (order) return `${tr("Заказ")} ${order[1]}`;
+      return tr(reason);
+    }
+    function renderInventory() {
+      const root = byId("inventoryHistory"); root.replaceChildren();
+      if (!state.stockHistory.length) {
+        root.append(el("p", "rounded-xl bg-slate-50 p-5 text-sm text-slate-500", "Изменений остатков пока нет."));
+        return;
+      }
+      for (const entry of state.stockHistory.slice(0, 100)) {
+        const row = el("div", "flex flex-wrap justify-between gap-2 rounded-xl border border-slate-100 p-3 text-sm");
+        row.append(el("span", "font-semibold", entry.productName), el("span", entry.delta > 0 ? "font-bold text-emerald-700" : "font-bold text-red-600", `${entry.delta > 0 ? "+" : ""}${entry.delta} шт.`),
+          el("span", "text-xs text-slate-500", `${translateStockReason(entry.reason)} · ${new Date(entry.createdAt).toLocaleString(LANGUAGE_LOCALES[currentLanguage])}`));
+        root.append(row);
+      }
+    }
+    function setProductStock(productId, rawValue) {
+      if (!isAdmin()) { toast("Требуется вход администратора.", "error"); return; }
+      const stock = Number(rawValue);
+      const product = state.products.find(item => item.id === productId);
+      if (!product || !Number.isSafeInteger(stock) || stock < 0 || stock > 100000) { toast("Остаток должен быть целым числом от 0 до 100 000.", "error"); renderAdmin(); return; }
+      const delta = stock - product.stock;
+      if (delta === 0) return;
+      if (delta < 0 && !window.confirm(tr("Уменьшить остаток «{name}» на {count} шт.?", { name: product.name, count: Math.abs(delta) }))) { renderAdmin(); return; }
+      const next = JSON.parse(JSON.stringify(state));
+      const target = next.products.find(item => item.id === productId); target.stock = stock;
+      next.stockHistory.unshift({ productId, productName: target.name, delta, reason: "Ручная корректировка", createdAt: new Date().toISOString() });
+      next.stockHistory = next.stockHistory.slice(0, 500);
+      if (!commitSnapshot(next)) return;
+      renderAdmin(); renderProducts();       toast(tr("Остаток обновлён"));
+    }
+    function csvCell(value) { return `"${String(value ?? "").replace(/"/g, '""')}"`; }
+    function exportOrdersCsv() {
+      if (!isAdmin()) { toast("Требуется вход администратора.", "error"); return; }
+      if (!state.orders.length) { toast("Нет заказов для экспорта.", "error"); return; }
+      const header = ["Номер", "Дата", "Клиент", "Email", "Телефон", "Адрес", "Состав", "Товары", "Доставка", "Скидка", "Итого", "Промокод", "Статус"].map(tr);
+      const rows = state.orders.map(order => {
+        const user = state.users.find(item => item.id === order.userId);
+        return [order.id, order.createdAt, order.customerName, order.customerEmail || user?.email || "", order.phone, order.address,
+          order.items.map(item => `${item.name} x ${item.quantity}`).join("; "), order.subtotal, order.delivery, order.discount, order.total, order.promoCode || "", order.status];
+      });
+      const content = `\uFEFF${[header, ...rows].map(row => row.map(csvCell).join(";")).join("\r\n")}`;
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(new Blob([content], { type: "text/csv;charset=utf-8" }));
+      link.download = `ramz-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click(); URL.revokeObjectURL(link.href);
+      toast(tr("Экспорт заказов подготовлен"));
+    }
+    function toLocalDateTime(value) {
+      const date = new Date(value);
+      return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    }
+    function openPromoEditor(promo = null) {
+      if (!isAdmin()) { toast("Требуется вход администратора.", "error"); return; }
+      byId("promoForm").classList.remove("hidden");
+      byId("promoError").classList.add("hidden");
+      byId("editPromoId").value = promo?.id || "";
+      byId("promoCode").value = promo?.code || "";
+      byId("promoType").value = promo?.type || "percent";
+      byId("promoValue").value = promo?.value ?? "";
+      byId("promoMinimum").value = promo?.minimum ?? 0;
+      byId("promoStartsAt").value = promo ? toLocalDateTime(promo.startsAt) : toLocalDateTime(new Date().toISOString());
+      byId("promoEndsAt").value = promo ? toLocalDateTime(promo.endsAt) : "2099-12-31T23:59";
+      byId("promoLimit").value = promo?.limit ?? 100;
+      byId("promoActive").checked = promo?.active ?? true;
+    }
+    function openProductEditor(product = null) {
+      if (!isAdmin()) { toast("Требуется вход администратора.", "error"); return; }
+      byId("productError").classList.add("hidden");
+      const select = byId("productCategory"); select.replaceChildren();
+      for (const category of CATEGORIES.filter(item => item.id !== "all")) { const option = el("option", "", category.name); option.value = category.id; select.append(option); }
+      byId("editProductId").value = product?.id || "";
+      byId("productEditorTitle").textContent = tr(product ? "Изменить товар" : "Новый товар");
+      byId("productName").value = product?.name || "";
+      byId("productCategory").value = product?.category || "phones";
+      byId("productColor").value = product?.color || "";
+      byId("productDescription").value = product?.descriptions?.ru || product?.description || "";
+      byId("productDescriptionKk").value = product?.descriptions?.kk || product?.description || "";
+      byId("productDescriptionEn").value = product?.descriptions?.en || product?.description || "";
+      byId("productPrice").value = product?.price ?? "";
+      byId("productStock").value = product?.stock ?? "";
+      byId("productImage").value = product?.image || "";
+      updateProductPreview();
+      dialogOpen(byId("productDialog"));
+    }
+    function updateProductPreview() {
+      const name = safeText(byId("productName").value, 100) || "Название товара";
+      byId("productImagePreview").replaceChildren(imageNode(byId("productImage").value.trim(), name, "max-h-40 max-w-full object-contain"));
+    }
+    byId("productImage").addEventListener("input", updateProductPreview);
+    byId("productName").addEventListener("input", updateProductPreview);
+    byId("adminButton").addEventListener("click", () => {
+      if (!isAdmin()) { toast("Доступ только для администратора.", "error"); return; }
+      renderAdmin(); dialogOpen(byId("adminDialog"));
+    });
+    byId("addProductButton").addEventListener("click", () => openProductEditor());
+    byId("addPromoButton").addEventListener("click", () => openPromoEditor());
+    byId("cancelPromoEdit").addEventListener("click", () => { byId("promoForm").classList.add("hidden"); byId("promoForm").reset(); });
+    document.querySelectorAll("[data-admin-tab]").forEach(button => button.addEventListener("click", () => {
+      if (!isAdmin()) { toast("Требуется вход администратора.", "error"); closeDialog("adminDialog"); return; }
+      const selected = button.dataset.adminTab;
+      document.querySelectorAll("[data-admin-tab]").forEach(tab => {
+        const active = tab === button; tab.setAttribute("aria-selected", String(active));
+        tab.className = `admin-tab pb-3 text-sm font-bold ${active ? "" : "text-slate-500"}`;
+      });
+      for (const [tab, panel] of [["products", "adminProductsPanel"], ["orders", "adminOrdersPanel"], ["promos", "adminPromosPanel"], ["inventory", "adminInventoryPanel"]]) {
+        byId(panel).classList.toggle("hidden", tab !== selected);
+      }
+    }));
+    byId("orderSearch").addEventListener("input", renderAdminOrders);
+    byId("orderStatusFilter").addEventListener("change", renderAdminOrders);
+    byId("exportOrdersButton").addEventListener("click", exportOrdersCsv);
+    byId("productForm").addEventListener("submit", event => {
+      event.preventDefault();
+      if (!isAdmin()) { showFormError("productError", "Требуется вход администратора."); return; }
+      const name = safeText(byId("productName").value, 100);
+      const category = byId("productCategory").value;
+      const color = safeText(byId("productColor").value, 60);
+      const descriptions = {
+        ru: safeText(byId("productDescription").value, 240),
+        kk: safeText(byId("productDescriptionKk").value, 240),
+        en: safeText(byId("productDescriptionEn").value, 240)
+      };
+      const price = Number(byId("productPrice").value);
+      const stock = Number(byId("productStock").value);
+      const imageInput = byId("productImage").value.trim();
+      const image = validImage(imageInput);
+      if (name.length < 2 || Object.values(descriptions).some(description => description.length < 3) ||
+        !CATEGORIES.some(item => item.id === category && item.id !== "all")) {
+        showFormError("productError", "Проверьте название, категорию и все три описания товара."); return;
+      }
+      if (byId("productPrice").value === "" || byId("productStock").value === "" ||
+        !Number.isSafeInteger(price) || price < 1 || price > 100000000 ||
+        !Number.isSafeInteger(stock) || stock < 0 || stock > 100000) {
+        showFormError("productError", "Цена и остаток должны быть конечными целыми числами в допустимом диапазоне."); return;
+      }
+      if (imageInput && !image) { showFormError("productError", "Укажите корректную ссылку изображения с HTTPS."); return; }
+      const id = byId("editProductId").value;
+      const next = JSON.parse(JSON.stringify(state));
+      if (id) {
+        const existing = next.products.find(item => item.id === id);
+        if (!existing) { showFormError("productError", "Товар не найден. Обновите список."); return; }
+        const delta = stock - existing.stock;
+        if (delta < 0 && !window.confirm(`Уменьшить остаток «${existing.name}» на ${Math.abs(delta)} шт.?`)) return;
+        Object.assign(existing, { name, category, color, description: descriptions.ru, descriptions, price, stock, image });
+        if (delta) next.stockHistory.unshift({ productId: id, productName: name, delta, reason: "Изменение карточки товара", createdAt: new Date().toISOString() });
+      } else {
+        const product = { id: `custom-${uid()}`, name, category, color, description: descriptions.ru, descriptions, price, stock, rating: 4.8, image };
+        next.products.unshift(product);
+        if (stock) next.stockHistory.unshift({ productId: product.id, productName: name, delta: stock, reason: "Начальный остаток товара", createdAt: new Date().toISOString() });
+      }
+      next.stockHistory = next.stockHistory.slice(0, 500);
+      if (!commitSnapshot(next)) return;
+      closeDialog("productDialog"); renderAdmin(); renderProducts(); toast(id ? "Товар обновлён" : "Товар добавлен");
+    });
+    byId("promoForm").addEventListener("submit", event => {
+      event.preventDefault();
+      if (!isAdmin()) { showFormError("promoError", "Требуется вход администратора."); return; }
+      const id = byId("editPromoId").value;
+      const code = safeText(byId("promoCode").value, 20).toUpperCase();
+      const type = byId("promoType").value;
+      const value = Number(byId("promoValue").value);
+      const minimum = Number(byId("promoMinimum").value);
+      const limit = Number(byId("promoLimit").value);
+      const startsValue = byId("promoStartsAt").value;
+      const endsValue = byId("promoEndsAt").value;
+      const startsDate = new Date(startsValue);
+      const endsDate = new Date(endsValue);
+      const existing = id ? state.promos.find(item => item.id === id) : null;
+      const duplicate = state.promos.some(item => item.id !== id && item.code === code);
+      if (!/^[A-Z0-9_-]{3,20}$/.test(code) || duplicate) { showFormError("promoError", "Введите уникальный код из 3–20 букв, цифр, дефиса или подчёркивания."); return; }
+      if (!["percent", "fixed"].includes(type) || !Number.isSafeInteger(value) || value < 1 || (type === "percent" && value > 100)) { showFormError("promoError", "Процент должен быть от 1 до 100, фиксированная скидка — целым положительным числом."); return; }
+      if (!Number.isSafeInteger(minimum) || minimum < 0 || byId("promoMinimum").value === "" ||
+        !Number.isSafeInteger(limit) || limit < Math.max(1, existing?.uses || 0) || byId("promoLimit").value === "") {
+        showFormError("promoError", "Проверьте минимальную сумму и лимит применений (он не может быть меньше использований)."); return;
+      }
+      if (!startsValue || !endsValue || !Number.isFinite(startsDate.getTime()) || !Number.isFinite(endsDate.getTime()) || startsDate >= endsDate) {
+        showFormError("promoError", "Дата начала должна быть раньше даты окончания."); return;
+      }
+      const startsAt = startsDate.toISOString();
+      const endsAt = endsDate.toISOString();
+      const promo = { id: id || `promo-${uid()}`, code, type, value, minimum, startsAt, endsAt, limit, uses: existing?.uses || 0, active: byId("promoActive").checked };
+      const next = JSON.parse(JSON.stringify(state));
+      const index = next.promos.findIndex(item => item.id === id);
+      if (index >= 0) next.promos[index] = promo;
+      else next.promos.push(promo);
+      if (next.promo && !next.promos.some(item => item.code === next.promo)) next.promo = null;
+      if (!commitSnapshot(next)) return;
+      byId("promoForm").classList.add("hidden"); byId("promoForm").reset();
+      renderPromos(); renderCart(); toast(id ? "Промокод обновлён" : "Промокод создан");
+    });
+    function deleteProduct(productId) {
+      if (!isAdmin()) { toast("Требуется вход администратора.", "error"); return; }
+      const hasOrder = state.orders.some(order => order.status !== "cancelled" && order.items.some(item => item.productId === productId));
+      if (hasOrder) { toast("Нельзя удалить товар из активного заказа. Сначала отмените заказ.", "error"); return; }
+      const product = state.products.find(item => item.id === productId);
+      if (!product) return;
+      if (!window.confirm(`Удалить «${product.name}» из каталога? Это действие нельзя отменить.`)) return;
+      const next = JSON.parse(JSON.stringify(state));
+      next.products = next.products.filter(item => item.id !== productId);
+      next.cart = next.cart.filter(item => item.productId !== productId);
+      next.favorites = next.favorites.filter(item => item.productId !== productId);
+      if (product.stock) next.stockHistory.unshift({ productId, productName: product.name, delta: -product.stock, reason: "Удаление товара из каталога", createdAt: new Date().toISOString() });
+      next.stockHistory = next.stockHistory.slice(0, 500);
+      if (!commitSnapshot(next)) return;
+      updateHeader(); renderAdmin(); renderProducts(); renderAccount(); toast("Товар удалён");
+    }
+    byId("languageSelect").addEventListener("change", () => updateLanguage(byId("languageSelect").value));
+    byId("authButton").setAttribute("aria-label", "Войти или выйти из аккаунта");
+    document.title = tr("Ramz Store — техника для вашего ритма");
+    renderCategories(); renderProducts(); updateHeader(); translateStaticContent();
+    if (storageWarning) window.setTimeout(() => toast(storageWarning, "error"), 0);
+  </script>
+</body>
+</html>
