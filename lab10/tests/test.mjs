@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import {findDish,filterMenu} from '../src/modules/menu.js';
+import {addItem,changeQuantity,createOrder,nextStatus} from '../src/modules/orders.js';
+import {calculateTotal,countItems} from '../src/modules/pricing.js';
+let cart=[];cart=addItem(cart,1);assert.equal(cart[0].quantity,1);console.log('PASS: добавление');
+cart=addItem(cart,1);assert.equal(cart[0].quantity,2);console.log('PASS: повторное добавление');
+assert.equal(calculateTotal(cart,findDish),2900);console.log('PASS: расчёт суммы');
+cart=changeQuantity(cart,1,-1);assert.equal(countItems(cart),1);console.log('PASS: изменение количества');
+assert.equal(filterMenu('Супы').length,2);console.log('PASS: фильтр категории');
+assert.equal(filterMenu('Все','плов').length,1);console.log('PASS: поиск');
+assert.throws(()=>createOrder(cart,' '),/имя/);console.log('PASS: пустое имя');
+assert.throws(()=>createOrder([],'Бекасыл'),/блюдо/);console.log('PASS: пустая корзина');
+const order=createOrder(cart,'Бекасыл');assert.equal(order.total,1450);assert.equal(nextStatus(order).status,'Готовится');console.log('PASS: оформление и статусы');
+for(let i=0;i<110;i++)try{cart=addItem(cart,1);}catch(e){assert.match(e.message,/99/);break;}
+assert.equal(cart[0].quantity,99);console.log('PASS: ограничение количества');
+console.log('Все тесты пройдены');
+import {categories,menu,addCategory,addDish,removeDish,removeCategory} from '../src/modules/menu.js';
+const cat=addCategory('Завтраки');assert.equal(cat,'Завтраки');console.log('PASS: новая категория');
+assert.throws(()=>addCategory('Завтраки'),/существует/);console.log('PASS: дублирование категории');
+const dish=addDish({name:'Омлет',category:'Завтраки',price:750,description:'Из яиц',image:'https://example.org/omelet.jpg'});assert.equal(findDish(dish.id).name,'Омлет');console.log('PASS: новое блюдо');
+assert.equal(filterMenu('Завтраки').length,1);console.log('PASS: фильтр новой категории');
+assert.throws(()=>addDish({name:'Ошибка',category:'Завтраки',price:-5}),/Цена/);console.log('PASS: отрицательная цена');
+assert.throws(()=>removeCategory('Завтраки'),/Сначала/);console.log('PASS: нельзя удалить непустую категорию');
+removeDish(dish.id);removeCategory('Завтраки');assert.equal(categories.includes('Завтраки'),false);console.log('PASS: удаление блюда и категории');
